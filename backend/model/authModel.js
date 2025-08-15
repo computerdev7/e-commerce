@@ -13,8 +13,12 @@ let schema = new mongoose.Schema({
     },
     provider : {
         type : String,
-        required : true,
         enum : ['local','google']
+    },
+    userType : {
+        type : String,
+        required : true,
+        enum : ['user','vendor']
     }
 },{timestamps : true})
 

@@ -1,15 +1,11 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
 
-export default function AuthTemplate({Func}) {
+export default function VendorAuthTemplate({Func,what}) {
 
     let [username,setUsername] = useState('');
     let [password, setPassword] = useState('');
     let navigate = useNavigate();
-
-    function func() {
-        window.location.href = "http://localhost:3000/auth/google"
-    }
 
     return (
         <>
@@ -26,24 +22,19 @@ export default function AuthTemplate({Func}) {
                             type='text' placeholder="password" />
                     </div>
                     <div className="border border-black w-full"></div>
-                    <button className="border border-gray-600 w-full rounded-4xl p-2"
-                        onClick={() => {
-                            func();
-                        }}
-                    >Google</button>
                     <button className="border border-b w-1/2 p-2 rounded-3xl"
                     onClick={()=> {
-                        Func(username,password)
+                        Func(username,password,'vendor')
                         .then(res=> {
                             if(res.statusText == 'Created'){
-                                navigate('/home')
-                            } else if(res.statusText == 'Ok'){
-                                navigate('/home')
+                                navigate('/vendorhome')
+                            } else if(res.statusText == 'OK'){
+                                navigate('/vendorhome')
                             }
                             console.log(res)
                         })
                     }}
-                    >Login</button>
+                    >{what}</button>
                 </div>
             </div>
         </>

@@ -4,26 +4,50 @@ import axios from "axios"
 let url = 'http://localhost:3000'
 
 let useStore = create((set,get)=> ({
-    signUp : async(username,password)=> {
-        let sendReq = await axios.post(`${url}/auth/local/signup`,{
+    usersignUp : async(username,password,usertype)=> {
+        let sendReq = await axios.post(`${url}/auth/local/user/signup`,{
             username : username,
-            password : password
+            password : password,
+            usertype : usertype
         },{
             withCredentials : true
         })
 
         return sendReq
     },
-    login : async(username,password)=> {
-        let sendReq = await axios.post(`${url}/auth/local/login`,{
+    userlogin : async(username,password,usertype)=> {
+        let sendReq = await axios.post(`${url}/auth/local/user/login`,{
             username : username,
-            password : password
+            password : password,
+            usertype : usertype
         },{
             withCredentials : true
         })
 
         return sendReq
-    }
+    },
+    vendorLogin : async(username,password,usertype)=> {
+        let sendReq = await axios.post(`${url}/auth/local/vendor/login`,{
+            username : username,
+            password : password,
+            usertype : usertype
+        },{
+            withCredentials : true
+        })
+
+        return sendReq
+    },
+    vendorSignup : async(username,password,usertype)=> {
+        let sendReq = await axios.post(`${url}/auth/local/vendor/signup`,{
+            username : username,
+            password : password,
+            usertype : usertype
+        },{
+            withCredentials : true
+        })
+
+        return sendReq
+    },
 }))
 
 export default useStore;

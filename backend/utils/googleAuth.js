@@ -2,7 +2,6 @@ import passport from "passport"
 import { Strategy as GoogleStrategy } from "passport-google-oauth20"
 import authSchema from "../model/authModel.js"
 
-
 export default async function GoogleAuth() {
 
     passport.use(new GoogleStrategy({
@@ -19,7 +18,8 @@ export default async function GoogleAuth() {
                 let addToDb = new authSchema({
                     username : profile.emails[0].value,
                     googleId : profile.emails[0].id,
-                    provider : 'google'
+                    provider : 'google',
+                    userType : 'user'
                 })
 
                 let saveToDb = await addToDb.save();
