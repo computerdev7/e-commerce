@@ -1,0 +1,63 @@
+import express from "express";
+import cors from "cors";
+import dotenv from "dotenv";
+import googleRoutes from "./routes/googleAuth.js"
+import GoogleAuth from "./utils/googleAuth.js";
+import connectToDb from "./database/database.js";
+import LocalAuth from "./routes/authRoutes.js"
+import MongoStore from "connect-mongo"
+import session from "express-session"
+import passport from "passport"
+import authSchema from "./model/authModel.js";
+
+let app = express();
+
+dotenv.config();
+
+app.use(cors({
+    origin: 'http://localhost:5173',
+    credentials: true
+}));
+app.use(express.json());
+
+app.use(session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+        maxAge: 1000 * 10,
+        httpOnly: true,
+        sameSite: 'lax',
+        secure : false
+    },
+    store: MongoStore.create({
+        mongoUrl: process.env.MONGO_DB,
+        ttl: 10
+    })
+}))
+
+app.use(passport.initialize());
+app.use(passport.session());
+
+passport.serializeUser((user, done) => done(null, user._id))
+passport.deserializeUser(async (user, done) => {
+
+    try {
+        let findUser = await authSchema.findById(user)
+        done(null, findUser)
+    } catch (err) {
+        done(err)
+    }
+})
+
+GoogleAuth()
+
+app.use('/auth/google', googleRoutes)
+app.use('/auth/local', LocalAuth)
+
+
+app.listen(3000, () => {
+    connectToDb();
+    console.log("Server running on http://localhost:3000")
+}
+);
