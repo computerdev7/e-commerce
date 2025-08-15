@@ -9,6 +9,8 @@ import MongoStore from "connect-mongo"
 import session from "express-session"
 import passport from "passport"
 import authSchema from "./model/authModel.js";
+import checkCookie from "./middleware/checkCookies.js";
+import CheckUserType from "./middleware/checkUserType.js";
 
 let app = express();
 
@@ -25,14 +27,14 @@ app.use(session({
     resave: false,
     saveUninitialized: false,
     cookie: {
-        maxAge: 1000 * 10,
+        maxAge: 1000 * 10 * 6,
         httpOnly: true,
         sameSite: 'lax',
         secure : false
     },
     store: MongoStore.create({
         mongoUrl: process.env.MONGO_DB,
-        ttl: 10
+        ttl: 10 * 6
     })
 }))
 
@@ -55,6 +57,13 @@ GoogleAuth()
 app.use('/auth/google', googleRoutes)
 app.use('/auth/local', LocalAuth)
 
+app.get('/user', checkCookie,CheckUserType('user'),(req, res) => {
+    res.send('userlogin')
+})
+
+app.get('/vendor', checkCookie,CheckUserType('vendor'),(req, res) => {
+    res.send('vendorlogin')
+})
 
 app.listen(3000, () => {
     connectToDb();
