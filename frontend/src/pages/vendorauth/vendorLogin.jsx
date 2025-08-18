@@ -1,9 +1,9 @@
-import useStore from "../../store"
+import useAuthStore from "../../stores/authStore.jsx"
 import VendorAuthTemplate from "../../component/VendorAuthTemplate"
 
 export default function VendorLogin(){
 
-    let {vendorLogin} = useStore()
+    let {vendorLogin} = useAuthStore()
 
     return (
         <>

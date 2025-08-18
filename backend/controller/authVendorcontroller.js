@@ -35,6 +35,7 @@ export async function vendorSignup(req, res, next) {
         })
 
     } catch (err) {
+        res.status(500).json({message : 'error in vendor singup', err})
         console.log(err)
     }
 }
@@ -65,6 +66,7 @@ export async function vendorLogin(req, res, next) {
         })
 
     } catch (err) {
+        res.status(500).json({message : 'error in vendor login', err})
         console.log(err)
     }
 }

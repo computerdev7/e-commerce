@@ -1,9 +1,9 @@
-import useStore from "../../store.jsx";
+import useAuthStore from "../../stores/authStore.jsx";
 import AuthTemplate from "../../component/UserAuthTemplate.jsx";
 
 export default function SignUp() {
 
-    let {usersignUp} = useStore();
+    let {usersignUp} = useAuthStore();
 
     return (
         <>

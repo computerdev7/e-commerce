@@ -33,6 +33,7 @@ export async function signup(req, res, next) {
         })
 
     } catch (err) {
+        res.status(500).json({message : 'error in user signup', err})
         console.log(err)
     }
 }
@@ -63,6 +64,7 @@ export async function login(req,res,next){
         })
 
     } catch (err) {
+        res.status(500).json({message : 'error in user login', err})
         console.log(err)
     }
 }
