@@ -12,6 +12,24 @@ let Schema = new mongoose.Schema({
     price : {
         type : Number,
         required : true
+    },
+    imageUrl : {
+        image300 : {
+            type : String,
+            required : true
+        },
+        image800 : {
+            type : String,
+            required : true
+        },
+        image1600 : {
+            type : String,
+            required : true
+        },
+    },
+    category : {
+        type : String,
+        required : true
     }
 })
 

@@ -11,7 +11,7 @@ import passport from "passport"
 import authSchema from "./model/authModel.js";
 import checkCookie from "./middleware/checkCookies.js";
 import CheckUserType from "./middleware/checkUserType.js";
-import productRoute from "./routes/productRoutes.js"
+import productRoute from "./routes/vendor_productRoutes.js"
 
 let app = express();
 
@@ -21,6 +21,7 @@ app.use(cors({
     origin: 'http://localhost:5173',
     credentials: true
 }));
+
 app.use(express.json());
 
 app.use(session({

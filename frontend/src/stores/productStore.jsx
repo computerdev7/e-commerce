@@ -4,12 +4,13 @@ import axios from "axios";
 let url = 'http://localhost:3000'
 
 let productStore = create((set, get) => ({
-    addProduct: async (product_name, price) => {
+    addProduct: async (product_name, price, category) => {
         try {
 
             let addProduct = await axios.post(`${url}/vendor/addproduct`, {
                 productname: product_name,
-                price: price
+                price,
+                category,
             }, {
                 withCredentials : true
             })
@@ -20,10 +21,10 @@ let productStore = create((set, get) => ({
             console.log(err)
         }
     },
-    getProducts : async()=> {
+    getProducts : async(page)=> {
 
         try{
-            let getProduct = await axios.get(`${url}/vendor/getAllProducts`,{
+            let getProduct = await axios.get(`${url}/vendor/getAllProducts?page=${page}`,{
                 withCredentials : true
             })
 

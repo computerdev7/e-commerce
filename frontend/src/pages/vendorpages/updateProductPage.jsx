@@ -38,7 +38,7 @@ export default function UpdateProduct() {
                         .then(res => console.log(res))
                         navigate('/vendorhome')
                     }}
-                    >ADD</button>
+                    >UPDATE</button>
                 </div>
             </div>
         </>
