@@ -9,9 +9,9 @@ import MongoStore from "connect-mongo"
 import session from "express-session"
 import passport from "passport"
 import authSchema from "./model/authModel.js";
-import checkCookie from "./middleware/checkCookies.js";
-import CheckUserType from "./middleware/checkUserType.js";
 import productRoute from "./routes/vendor_productRoutes.js"
+import productInfoRoute from "./routes/productInfo.js"
+import productRouteUser from "./routes/user_productRoutes.js"
 
 let app = express();
 
@@ -59,14 +59,8 @@ GoogleAuth()
 app.use('/auth/google', googleRoutes)
 app.use('/auth/local', LocalAuth)
 app.use('/vendor',productRoute)
-
-app.get('/user', checkCookie,CheckUserType('user'),(req, res) => {
-    res.send('userlogin')
-})
-
-app.get('/vendor', checkCookie,CheckUserType('vendor'),(req, res) => {
-    res.send('vendorlogin')
-})
+app.use('/vendor',productInfoRoute)
+app.use('/user',productRouteUser)
 
 app.listen(3000, () => {
     connectToDb();

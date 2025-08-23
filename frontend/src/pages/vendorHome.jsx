@@ -21,10 +21,10 @@ export default function VendorHome() {
     const { scrollTop, scrollHeight, clientHeight } = e.target
 
     if (scrollTop + clientHeight >= scrollHeight - 1) {
-      console.log('runing')
-      setPage(e => ++e);
-      console.log(page)
-      getProducts(page)
+
+       setPage(e => ++e);
+
+      getProducts(page + 1)
         .then(res => {
           console.log(res)
           setProducts(prev=> ([...prev,...res.data.message]))

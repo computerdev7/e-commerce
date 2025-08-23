@@ -7,6 +7,7 @@ import VendorLogin from "./pages/vendorauth/vendorLogin.jsx"
 import VendorHome from "./pages/vendorHome.jsx"
 import AddProduct from "./pages/vendorpages/addProductPage.jsx"
 import UpdateProduct from "./pages/vendorpages/updateProductPage.jsx"
+import Cart from "./pages/userpages/cart.jsx"
 
 export default function App() {
 
@@ -21,6 +22,7 @@ export default function App() {
           <Route path="/vendorlogin" element={<VendorLogin/>} />
           <Route path="/addproduct" element={<AddProduct/>} />
           <Route path="/updateproduct/:id" element={<UpdateProduct/>} />
+          <Route path="/cart" element={<Cart/>} />
       </Routes>
       </>
   )

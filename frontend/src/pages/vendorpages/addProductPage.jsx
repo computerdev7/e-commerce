@@ -3,19 +3,36 @@ import { useState } from "react";
 import { useNavigate } from "react-router";
 import { compressImage } from "../../utils/imageCompression";
 import vendorPreSigned from "../../stores/vendor_presignedUrl";
+import { useEffect } from "react";
+import categoryStore from "../../stores/categoryStore.jsx";
 
 export default function AddProduct() {
 
     let { addProduct } = productStore();
     let { putImageOnS3 } = vendorPreSigned();
+    let {getCategory} = categoryStore();
     let [imageData, setImageData] = useState('');
     let [productName, setProductName] = useState('')
     let [productPrice, setProductPrice] = useState(0)
     let [showLoading, setShowLoading] = useState(true)
     let [category,setCategory] = useState('')
+    let [categoryArray,setCategoryArray] = useState([])
     let navigate = useNavigate()
 
-    console.log(category)
+    useEffect(()=> {
+        
+        getCategory()
+        .then(res=> setCategoryArray(res.data.message[0].product_categories))
+
+    },[])
+
+    let rendorCategory = categoryArray?.map((e)=> {
+        return (
+            <>
+            <option value={e}>{e}</option>
+            </>
+        )
+    })
 
     return (
         <>
@@ -45,16 +62,7 @@ export default function AddProduct() {
                     required
                     >
                         <option value={''}>select options</option>
-                        <option value={'electronic'}>Electronic</option>
-                        <option value={'software'}>Software</option>
-                        <option value={'decoration'}>Decoration</option>
-                        <option value={'cloth'}>Clothing</option>
-                        <option value={'health'}>Health</option>
-                        <option value={'makup'}>Make-up</option>
-                        <option value={'furniture'}>Furniture</option>
-                        <option value={'home-essential'}>Home-Essential</option>
-                        <option value={'grocery'}>Grocery</option>
-                        <option value={'grocery-food'}>Grocery-food</option>
+                        {rendorCategory}
                     </select>
                 </div>
                 <div>
