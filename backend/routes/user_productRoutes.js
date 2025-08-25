@@ -42,7 +42,6 @@ route.get('/getAllProducts',checkCookie,CheckUserType('user'),async(req,res)=>{
 
         }
         res.status(200).json({message : sendArr})
-        // let data = await ProductSchema.find
     }catch(err){
         res.status(500).json({message : err})
     }
@@ -91,6 +90,23 @@ route.delete('/removefromcart',checkCookie,CheckUserType('user'),async(req,res)=
         res.status(200).json({message : data})
     }catch(err){
         console.log(err)
+        res.status(500).json({message : err})
+    }
+
+})
+
+route.get('/search',async(req,res)=> {
+
+    let q = req.query.q;
+    let regex = new RegExp(q, 'i');
+    let page = req.query.page || 1;
+    const skip = (page - 1) * 10;
+
+    try{
+        let data = await ProductSchema.find({$or: [{product_name : regex},{category : regex}]}).skip(skip).limit(10);
+
+        res.status(200).json({message : data})
+    }catch(err){
         res.status(500).json({message : err})
     }
 

@@ -53,7 +53,17 @@ let userProductStore = create((set, get) => ({
             console.log(err)
         }
     },
+    searchProduct: async(q,page) => {
+        try{
+            let data = await axios.get(`${url}/search?q=${q}&page=${page}`,{
+                withCredentials: true
+            })
 
+            return data 
+        }catch(err){
+            console.log(err)
+        }
+    }
 
 }))
 

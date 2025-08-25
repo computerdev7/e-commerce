@@ -52,7 +52,7 @@ route.post('/addproduct', checkCookie, CheckUserType('vendor'), async (req, res)
 route.get('/getAllProducts', checkCookie, CheckUserType('vendor'), async (req, res) => {
 
     let data = JSON.stringify(req.user._id)
-    let page = req.query.page
+    let page = req.query.page || 1
     const skip = (page - 1) * 10;
 
     try {

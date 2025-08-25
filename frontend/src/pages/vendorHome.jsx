@@ -17,7 +17,7 @@ export default function VendorHome() {
 
   }, [])
 
-  function handleScroll(e) {
+   function handleScroll(e) {
     const { scrollTop, scrollHeight, clientHeight } = e.target
 
     if (scrollTop + clientHeight >= scrollHeight - 1) {
@@ -26,7 +26,6 @@ export default function VendorHome() {
 
       getProducts(page + 1)
         .then(res => {
-          console.log(res)
           setProducts(prev=> ([...prev,...res.data.message]))
         })
     }
@@ -34,7 +33,7 @@ export default function VendorHome() {
 
   let renderProduct = (products.length > 0 ?
     products.map((e, i) => {
-      console.log(e)
+      
       return (
         <>
           <div className="w-full p-2 flex items-center bg-gray-200 "
