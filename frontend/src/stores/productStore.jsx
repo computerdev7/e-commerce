@@ -12,7 +12,7 @@ let productStore = create((set, get) => ({
                 price,
                 category,
             }, {
-                withCredentials : true
+                withCredentials: true
             })
 
             return addProduct
@@ -21,58 +21,77 @@ let productStore = create((set, get) => ({
             console.log(err)
         }
     },
-    getProducts : async(page)=> {
+    getProducts: async (page, pn, cat, p) => {
 
-        try{
-            let getProduct = await axios.get(`${url}/vendor/getAllProducts?page=${page}`,{
-                withCredentials : true
+        try {
+            let getProduct = await axios.get(`${url}/vendor/getAllProducts?page=${page}&cat=${cat}&p=${p}&pn=${pn}`, {
+                withCredentials: true
             })
 
             return getProduct
-        }catch(err){
+        } catch (err) {
             console.log(err)
         }
 
     },
-    deleteProduct : async(id)=> {
+    deleteProduct: async (id) => {
 
-        try{
-            let deleteProduct = await axios.delete(`${url}/vendor/deleteProduct/${id}`,{
-                withCredentials : true
+        try {
+            let deleteProduct = await axios.delete(`${url}/vendor/deleteProduct/${id}`, {
+                withCredentials: true
             })
 
             return deleteProduct
-        }catch(err){
+        } catch (err) {
             console.log(err)
         }
     },
-    updateProduct : async(product_name,price, id)=> {
+    updateProduct: async (product_name, price, id) => {
 
-        try{
+        try {
             let updateProduct = await axios.patch(`${url}/vendor/updateProduct`, {
                 product_name,
                 price,
                 id
             }, {
-                withCredentials : true
+                withCredentials: true
             })
 
             return updateProduct
-        }catch(err){
+        } catch (err) {
             console.log(err)
         }
     },
-    getProduct : async(id)=> {
+    getProduct: async (id) => {
         try {
-            let getProduct = await axios.get(`${url}/vendor/getProduct/${id}`,{
-                withCredentials : true
+            let getProduct = await axios.get(`${url}/vendor/getProduct/${id}`, {
+                withCredentials: true
             })
 
             return getProduct;
-        }catch(err){
+        } catch (err) {
             console.log(err)
         }
 
+    },
+    searchSuggestion: async (q) => {
+        try {
+            let getSuggestion = await axios.get(`${url}/vendor/searchsuggestion?q=${q}`, {
+                withCredentials: true
+            })
+
+            let data = getSuggestion.data.message
+
+            let arr = [];
+            
+            arr = data.map((e) => {
+                return e.product_name
+            })
+
+            return arr
+        } catch (err) {
+            console.log(err)
+        }
     }
 }))
 

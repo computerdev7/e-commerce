@@ -4,112 +4,30 @@ import checkCookie from '../middleware/checkCookies.js'
 import CheckUserType from '../middleware/checkUserType.js'
 import ProductSchema from '../model/productModel.js'
 import authSchema from "../model/authModel.js"
+import { getCategories,getAllProducts } from '../controller/userProductController.js'
+import { addtocart,cartlist,removeFromCart } from '../controller/userCartController.js'
+import { searchSuggestion, userSearch } from '../controller/userSearchController.js'
 
 let route = express.Router()
 
-route.get('/getCategories',checkCookie,CheckUserType('user'),async(req,res)=> {
 
-    try{
-        let data = await productInfo.find()
-        res.status(200).json({message : data})
-    }catch(err){
-        res.status(500).json({message : err})
-    }
+route.get('/getCategories',checkCookie,CheckUserType('user'),getCategories)
 
-})
-
-route.get('/getAllProducts',checkCookie,CheckUserType('user'),async(req,res)=>{
-
-    let sendArr = [];
-
-    try{
-        let data = await productInfo.find()
-
-        let categoryArray = data[0].product_categories
-       
-        for(let i = 0; i < categoryArray.length ; i++){
-
-            let categoryData = await ProductSchema.aggregate([
-                { $match : { category : categoryArray[i] }},
-                { $sample: { size: 1 } }
-            ])
-
-            let obj = {
-                [categoryArray[i]] : categoryData
-            }
-
-            sendArr.push(obj)
-
-        }
-        res.status(200).json({message : sendArr})
-    }catch(err){
-        res.status(500).json({message : err})
-    }
-
-})
+route.get('/getAllProducts',checkCookie,CheckUserType('user'),getAllProducts)
 
 
-route.post('/addtocart',checkCookie,CheckUserType('user'),async(req,res)=> {
 
-    let id = req.query.id
-    let userId = req.user.id
+route.post('/addtocart',checkCookie,CheckUserType('user'),addtocart)
 
-    try{
-        let data = await authSchema.findByIdAndUpdate({_id : userId}, {$push : {cart : id}},{new : true})
+route.get('/cartlist',checkCookie,CheckUserType('user'),cartlist)
 
-        res.status(201).json({message : data})
-    }catch(err){
-        res.status(500).json({message : err})
-    }
+route.delete('/removefromcart',checkCookie,CheckUserType('user'),removeFromCart)
 
-})
 
-route.get('/cartlist',checkCookie,CheckUserType('user'),async(req,res)=> {
 
-    let userId = req.user.id
+route.get('/search',checkCookie,CheckUserType('user'),userSearch)
 
-    try{
-        let data = await authSchema.find({_id : userId}).populate('cart')
-        let sendData = data[0].cart
-        res.status(200).json({message : sendData})
-    }catch(err){
-        console.log(err)
-        res.status(500).json({message : err})
-    }
+route.get('/searchsuggestion',checkCookie,CheckUserType('user'),searchSuggestion)
 
-})
-
-route.delete('/removefromcart',checkCookie,CheckUserType('user'),async(req,res)=> {
-
-    let userId = req.user.id
-    let id = req.query.id
-
-    try{
-        let data = await authSchema.findByIdAndUpdate({_id : userId},{$pull : {cart : id}},{new : true})
-
-        res.status(200).json({message : data})
-    }catch(err){
-        console.log(err)
-        res.status(500).json({message : err})
-    }
-
-})
-
-route.get('/search',async(req,res)=> {
-
-    let q = req.query.q;
-    let regex = new RegExp(q, 'i');
-    let page = req.query.page || 1;
-    const skip = (page - 1) * 10;
-
-    try{
-        let data = await ProductSchema.find({$or: [{product_name : regex},{category : regex}]}).skip(skip).limit(10);
-
-        res.status(200).json({message : data})
-    }catch(err){
-        res.status(500).json({message : err})
-    }
-
-})
 
 export default route

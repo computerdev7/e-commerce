@@ -53,14 +53,33 @@ let userProductStore = create((set, get) => ({
             console.log(err)
         }
     },
-    searchProduct: async(q,page) => {
+    searchProduct: async(q,page,chooseCategory,choosePrice) => {
         try{
-            let data = await axios.get(`${url}/search?q=${q}&page=${page}`,{
+            let data = await axios.get(`${url}/search?q=${q}&page=${page}&cat=${chooseCategory}&p=${choosePrice}`,{
                 withCredentials: true
             })
 
             return data 
         }catch(err){
+            console.log(err)
+        }
+    },
+    searchSuggestion: async (q) => {
+        try {
+            let getSuggestion = await axios.get(`${url}/searchsuggestion?q=${q}`, {
+                withCredentials: true
+            })
+
+            let data = getSuggestion.data.message
+
+            let arr = [];
+            
+            arr = data.map((e) => {
+                return e.product_name
+            })
+
+            return arr
+        } catch (err) {
             console.log(err)
         }
     }

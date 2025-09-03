@@ -20,8 +20,6 @@ export default function RenderProductCat({ productArray, category }) {
 
     }
 
-
-
     let renderInnerProducts = productArray?.map((el) => {
         return (
             <>

@@ -1,17 +1,17 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
-import googleRoutes from "./routes/googleAuth.js"
+import googleRoutes from "./routes/googleAuth.js";
 import GoogleAuth from "./utils/googleAuth.js";
 import connectToDb from "./database/database.js";
-import LocalAuth from "./routes/authRoutes.js"
-import MongoStore from "connect-mongo"
-import session from "express-session"
-import passport from "passport"
+import LocalAuth from "./routes/authRoutes.js";
+import MongoStore from "connect-mongo";
+import session from "express-session";
+import passport from "passport";
 import authSchema from "./model/authModel.js";
-import productRoute from "./routes/vendor_productRoutes.js"
-import productInfoRoute from "./routes/productInfo.js"
-import productRouteUser from "./routes/user_productRoutes.js"
+import productRoute from "./routes/vendor_productRoutes.js";
+import productInfoRoute from "./routes/productInfo.js";
+import productRouteUser from "./routes/user_productRoutes.js";
 
 let app = express();
 
