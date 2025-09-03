@@ -9,6 +9,7 @@ import AddProduct from "./pages/vendorpages/addProductPage.jsx"
 import UpdateProduct from "./pages/vendorpages/updateProductPage.jsx"
 import Cart from "./pages/userpages/cart.jsx"
 import SearchPage from "./pages/userpages/searchPage.jsx"
+import MainHomePage from "./pages/vendorpages/mainPage.jsx"
 
 export default function App() {
 
@@ -25,6 +26,7 @@ export default function App() {
           <Route path="/updateproduct/:id" element={<UpdateProduct/>} />
           <Route path="/cart" element={<Cart/>} />
           <Route path="/searchpage" element={<SearchPage/>} />
+          <Route path="/vendormain" element={<MainHomePage/>} />
       </Routes>
       </>
   )
