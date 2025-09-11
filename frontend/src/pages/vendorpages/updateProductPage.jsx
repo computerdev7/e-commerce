@@ -152,7 +152,11 @@ export default function UpdateProduct() {
                                         alert('resolution out of bound')
                                     } else if (res == 1) {
                                         alert('img size is out of')
-                                    } else {
+                                    } else if (res == 2) {
+                                        alert('there is either less than 4 or more than 6 images')
+                                    }
+                                    else {
+                                        console.log(res)
                                         setImageData(res)
                                         setShowLoading(false)
                                     }
@@ -161,6 +165,7 @@ export default function UpdateProduct() {
                         </div>
                         <button disabled={showLoading ? true : false} className="border border-b p-2 w-32"
                             onClick={() => {
+
                                 updateProduct(formData.productName, formData.productPrice, id, formData.category, formData.subCategory, formData.desc, shortDetailInput, longDetailInput, numberOfImages.current)
                                     .then(res => {
                                         console.log(res.data.message)

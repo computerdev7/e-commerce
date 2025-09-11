@@ -21,13 +21,18 @@ export default function RenderProductCat({ productArray, category }) {
     }
 
     let renderInnerProducts = productArray?.map((el) => {
+
         return (
             <>
-                <div className="h-48 w-48 flex-shrink-0 bg-amber-600 rounded-2xl flex justify-center items-center flex-col overflow-hidden">
+                <div
+                onClick={()=> {
+                    navigate('/productpage',{state : {id : el._id}})
+                }}
+                className="min-h-48 w-48 flex-shrink-0 bg-amber-600 rounded-2xl flex justify-center items-center flex-col overflow-hidden">
                     <div className="h-33 w-full overflow-hidden">
                         <img className="lazy object-contain" src={el.imageUrl.image300} />
                     </div>
-                    <div className="h-15 w-full pl-3 pr-3 bg-green-200 flex flex-col ">
+                    <div className="min-h-15 w-full pl-3 pr-3 bg-green-200 flex flex-col ">
                         <div className="w-full">
                             <p className="text-left">{el.product_name}</p>
                         </div>

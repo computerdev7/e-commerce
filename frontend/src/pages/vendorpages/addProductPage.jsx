@@ -17,7 +17,7 @@ export default function AddProduct() {
         producName: '',
         productPrice: 0,
         category: '',
-        subCategory: '',t
+        subCategory: '',
         desc: '',
         quantity: ''
     })
@@ -85,8 +85,6 @@ export default function AddProduct() {
 
     },[changePosition])
 
-    console.log(changePosition, imageData)
-
     let rendorCategory = categoryArray?.map((e, i) => {
         return (
             <option key={i} value={e}>{e}</option>
@@ -99,8 +97,10 @@ export default function AddProduct() {
                 alert('resolution out of bound')
             } else if (res == 1) {
                 alert('img size is out of')
-            } else {
-                console.log(res)
+            } else if( res == 2) {
+                alert('there is either less than 4 or more than 6 images')
+            }
+            else {
                 setImageData(res)
                 setShowLoading(false)
             }

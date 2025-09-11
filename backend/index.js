@@ -12,6 +12,8 @@ import authSchema from "./model/authModel.js";
 import productRoute from "./routes/vendor_productRoutes.js";
 import productInfoRoute from "./routes/productInfo.js";
 import productRouteUser from "./routes/user_productRoutes.js";
+import Razorpay from "razorpay";
+import crypto from "crypto"
 
 let app = express();
 
@@ -61,6 +63,49 @@ app.use('/auth/local', LocalAuth)
 app.use('/vendor',productRoute)
 app.use('/vendor',productInfoRoute)
 app.use('/user',productRouteUser)
+
+const razorpay = new Razorpay({
+    key_id: process.env.RAZOR_KEY_ID,
+    key_secret: process.env.RAZOR_SECRET_KEY
+})
+
+app.post('/create-order',async(req,res)=> {
+    try{
+        const options = {
+            amount : 50000,
+            currency : 'INR',
+            receipt : 'receipt#1'
+        }
+
+        const order = await razorpay.orders.create(options)
+        res.status(201).json({message : order})
+
+    }catch(err){
+        res.status(500).json({message : err})
+    }
+})
+
+app.post('/check-order',(req,res)=> {
+    try{
+
+        const {razorpay_order_id, razorpay_payment_id, razorpay_signature} = req.body;
+
+        const generated_signature = crypto
+        .createHmac("sha256","jGWXRF5D6HbsNjgiatmEKUsL")
+        .update(razorpay_order_id + "|" + razorpay_payment_id)
+        .digest('hex')
+
+        if(generated_signature === razorpay_signature){
+            res.status(200).json({message : 'success'})
+        } else {
+            res.status(500).json({message : 'failed' })
+        }
+
+    }catch(err){
+        console.log(err)
+        res.status(500).json({message : err})
+    }
+})
 
 app.listen(3000, () => {
     connectToDb();

@@ -39,3 +39,16 @@ export async function getAllProducts(req, res) {
     }
 
 }
+
+export async function getProduct(req,res){
+
+    let id = req.query.id
+
+    try{
+        let data = await ProductSchema.find({_id : id})
+        res.status(200).json({message : data})
+    }catch(err){
+        console.log(err)
+        res.status(500).json({message : err})
+    }
+}

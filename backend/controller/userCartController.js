@@ -5,9 +5,16 @@ export async function addtocart(req, res) {
     let userId = req.user.id
 
     try {
-        let data = await authSchema.findByIdAndUpdate({ _id: userId }, { $push: { cart: id } }, { new: true })
+        let findDataInCart = await authSchema.find({_id: userId},{cart : {$elemMatch : {$eq: id}}})
+        console.log(findDataInCart[0].cart.length, findDataInCart[0].cart)
+        if(findDataInCart[0].cart.length == 0){
 
-        res.status(201).json({ message: data })
+            let data = await authSchema.findByIdAndUpdate({ _id: userId }, { $push: { cart: id } }, { new: true })
+            res.status(201).json({ message: data })
+        } else {
+            res.status(201).json({message : 'product is already in cart'})
+        }
+
     } catch (err) {
         res.status(500).json({ message: err })
     }

@@ -17,6 +17,17 @@ let userProductStore = create((set, get) => ({
             console.log(err)
         }
     },
+    getUserProduct: async (id)=> {
+        try{
+            let data = await axios.get(`${url}/getProduct?id=${id}`,{
+                withCredentials : true
+            })
+
+            return data
+        }catch(err){
+            console.log(err)
+        }
+    },
     addToCart: async (id) => {
         try{
             let data = await axios.post(`${url}/addtocart?id=${id}`,{}, {

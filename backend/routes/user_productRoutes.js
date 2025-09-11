@@ -4,7 +4,7 @@ import checkCookie from '../middleware/checkCookies.js'
 import CheckUserType from '../middleware/checkUserType.js'
 import ProductSchema from '../model/productModel.js'
 import authSchema from "../model/authModel.js"
-import { getCategories,getAllProducts } from '../controller/userProductController.js'
+import { getCategories,getAllProducts,getProduct } from '../controller/userProductController.js'
 import { addtocart,cartlist,removeFromCart } from '../controller/userCartController.js'
 import { searchSuggestion, userSearch } from '../controller/userSearchController.js'
 
@@ -15,6 +15,7 @@ route.get('/getCategories',checkCookie,CheckUserType('user'),getCategories)
 
 route.get('/getAllProducts',checkCookie,CheckUserType('user'),getAllProducts)
 
+route.get('/getProduct',checkCookie,CheckUserType('user'),getProduct)
 
 
 route.post('/addtocart',checkCookie,CheckUserType('user'),addtocart)
