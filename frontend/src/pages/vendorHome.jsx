@@ -6,7 +6,7 @@ import VendorRendorProduct from "../component/vendorRendorProducts.jsx"
 
 export default function VendorHome() {
 
-  let { getProducts, deleteProduct } = productStore()
+  let { getProducts } = productStore()
   let [products, setProducts] = useState([])
   let navigate = useNavigate();
   let [page, setPage] = useState(1);

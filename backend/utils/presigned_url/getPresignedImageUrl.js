@@ -30,17 +30,39 @@ export async function getPreSignedImageUrl(username,filename){
 
 }
 
-export async function getDeletePreSignedUrl(username,filename){
+export async function getDeletePreSignedUrl(username,filename,extraImage){
 
-    const command = new DeleteObjectCommand({
-        Bucket : 'e-commerce-image',
-        Key : `vendor-product/${username}/${filename}`,
-    })
+    let sizes = [300,800,1600]
 
-    try{
-        await S3.send(command)
-    }catch(err){
-        console.log(err)
+    for(let i = 0; i < 3; i++){
+        console.log(`vendor-product/${username}/${filename}${sizes[i]}.webp`)
+        const command = new DeleteObjectCommand({
+            Bucket : 'e-commerce-image',
+            Key : `vendor-product/${username}/${filename}${sizes[i]}.webp`,
+        })
+    
+        try{
+            let data =  await S3.send(command)
+        }catch(err){
+            console.log(err)
+        }
+    }
+
+    for(let i = 1; i <= extraImage.length; i++){
+
+        for(let j = 1; j < 3; j++) {
+            console.log(`vendor-product/${username}/${filename}${i}${sizes[j]}.webp`)
+            const command = new DeleteObjectCommand({
+               Bucket : 'e-commerce-image',
+               Key : `vendor-product/${username}/${filename}${i}${sizes[j]}.webp`,
+           })
+           try{
+               let data =  await S3.send(command)
+           }catch(err){
+               console.log(err)
+           }
+        }
+
     }
 
 }

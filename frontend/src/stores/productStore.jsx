@@ -4,13 +4,19 @@ import axios from "axios";
 let url = 'http://localhost:3000'
 
 let productStore = create((set, get) => ({
-    addProduct: async (product_name, price, category) => {
+    addProduct: async (product_name, price, category, sub_category, desc, shortDetailInput, longDetailInput, imagesNo, quantity) => {
         try {
 
             let addProduct = await axios.post(`${url}/vendor/addproduct`, {
                 productname: product_name,
                 price,
                 category,
+                sub_category,
+                desc,
+                shortDetailInput,
+                longDetailInput,
+                imagesNo,
+                quantity
             }, {
                 withCredentials: true
             })
@@ -46,13 +52,19 @@ let productStore = create((set, get) => ({
             console.log(err)
         }
     },
-    updateProduct: async (product_name, price, id) => {
+    updateProduct: async (product_name, price, id, category, sub_category, product_desc, product_short_details, product_long_details, imagesNo) => {
 
         try {
             let updateProduct = await axios.patch(`${url}/vendor/updateProduct`, {
                 product_name,
                 price,
-                id
+                id,
+                category,
+                sub_category,
+                product_desc,
+                product_long_details,
+                product_short_details,
+                imagesNo
             }, {
                 withCredentials: true
             })
