@@ -7,7 +7,7 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-rsp.csv
+rzp.csv
 secret.json
 .env
 node_modules
