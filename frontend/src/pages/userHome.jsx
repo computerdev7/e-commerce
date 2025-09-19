@@ -38,6 +38,13 @@ export default function Home() {
           <p>BuyYouLike</p>
           <div className="flex justify-center items-center gap-10">
             <button
+            onClick={()=> {
+              navigate('/vendorhome')
+            }}
+            >
+              Sell
+            </button>
+            <button
               onClick={() => {
                 navigate('/searchpage')
               }}

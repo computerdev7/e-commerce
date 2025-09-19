@@ -36,9 +36,9 @@ export default function AuthTemplate({Func,what}) {
                         Func(username,password,'user')
                         .then(res=> {
                             if(res.statusText == 'Created'){
-                                navigate('/userhome')
+                                navigate('/')
                             } else if(res.statusText == 'OK'){
-                                navigate('/userhome')
+                                navigate('/')
                             }
                             console.log(res)
                         })

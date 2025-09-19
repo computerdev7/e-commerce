@@ -1,6 +1,5 @@
 export default function checkCookie(req,res,next){
 
-
     if(req.user){
         return next();
     }

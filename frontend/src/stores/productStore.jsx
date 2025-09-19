@@ -4,7 +4,7 @@ import axios from "axios";
 let url = 'http://localhost:3000'
 
 let productStore = create((set, get) => ({
-    addProduct: async (product_name, price, category, sub_category, desc, shortDetailInput, longDetailInput, imagesNo, quantity) => {
+    addProduct: async (product_name, price, id, category, sub_category, desc, shortDetailInput, longDetailInput, imagesNo, quantity) => {
         try {
 
             let addProduct = await axios.post(`${url}/vendor/addproduct`, {
@@ -52,7 +52,9 @@ let productStore = create((set, get) => ({
             console.log(err)
         }
     },
-    updateProduct: async (product_name, price, id, category, sub_category, product_desc, product_short_details, product_long_details, imagesNo) => {
+    updateProduct: async (product_name, price, id, category, sub_category, product_desc, product_short_details, product_long_details, imagesNo, quantity) => {
+
+        let changeNumber = +quantity;
 
         try {
             let updateProduct = await axios.patch(`${url}/vendor/updateProduct`, {
@@ -64,7 +66,8 @@ let productStore = create((set, get) => ({
                 product_desc,
                 product_long_details,
                 product_short_details,
-                imagesNo
+                imagesNo,
+                quantity : changeNumber
             }, {
                 withCredentials: true
             })

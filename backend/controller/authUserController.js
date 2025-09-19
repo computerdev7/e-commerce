@@ -52,7 +52,7 @@ export async function login(req,res,next){
         let comparePassword = await bcrypt.compare(password,findUser[0].password)
 
         if(!comparePassword){
-            res.status(403).json({message : 'wrong password'})
+           return res.status(403).json({message : 'wrong password'})
         }
 
         req.login(findUser[0], (err) => {
@@ -64,7 +64,7 @@ export async function login(req,res,next){
         })
 
     } catch (err) {
-        res.status(500).json({message : 'error in user login', err})
         console.log(err)
+        res.status(500).json({message : 'error in user login', err})
     }
 }

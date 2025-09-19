@@ -16,6 +16,7 @@ let useStore = create((set,get)=> ({
         return sendReq
     },
     userlogin : async(username,password,usertype)=> {
+        console.log(username,usertype,password)
         let sendReq = await axios.post(`${url}/auth/local/user/login`,{
             username : username,
             password : password,
@@ -23,7 +24,6 @@ let useStore = create((set,get)=> ({
         },{
             withCredentials : true
         })
-
         return sendReq
     },
     vendorLogin : async(username,password,usertype)=> {

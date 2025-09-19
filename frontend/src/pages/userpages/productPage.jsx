@@ -13,7 +13,7 @@ export default function ProductPage() {
     let carousalImage = useRef();
 
     async function checkOut(){
-        let order = await axios.post('http://localhost:3000/create-order',{},{
+        let order = await axios.post('http://localhost:3000/userorder/create-order',{id : location.state.id },{
             withCredentials : true
         })
 
@@ -26,7 +26,7 @@ export default function ProductPage() {
             name : 'test',
             order_id : realD.id,
             handler : async function(response){
-                let checkPayment = await axios.post('http://localhost:3000/check-order',response,{
+                let checkPayment = await axios.post('http://localhost:3000/userorder/check-order',{response, id : location.state.id },{
                     withCredentials : true
                 })
 
@@ -151,9 +151,13 @@ export default function ProductPage() {
                                 Add to Cart
                             </button>
                             <button 
-                            onClick={checkOut}
+                            onClick={()=> {
+                                if(wholeData?.quantity != '0'){
+                                    checkOut();
+                                }
+                            }}
                             className="border">
-                                Buy Now
+                               {wholeData?.quantity <= 0? 'Sold out' : 'Buy now'}
                             </button>
                         </div>
                     </div>

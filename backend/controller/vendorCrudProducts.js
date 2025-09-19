@@ -7,6 +7,8 @@ export async function addProduct(req, res) {
 
     let id = req.user._id
 
+    let changeToNumber = +quantity
+
     try {
         
         let addProduct = new ProductSchema({
@@ -18,7 +20,7 @@ export async function addProduct(req, res) {
             product_long_details: longDetailInput,
             sub_category: sub_category,
             category: category,
-            quantity: quantity
+            quantity: changeToNumber
         })
         
         let saveProduct = await addProduct.save()
@@ -94,9 +96,7 @@ export async function updateProduct(req, res) {
     let id = req.body.id
     let { imagesNo } = req.body
     let userid = req.user._id
-    
     let wholeUpdate = req.body
-    
     let presignedArray = [];
     
     try {
@@ -129,7 +129,6 @@ export async function updateProduct(req, res) {
             }
             wholeUpdate.imageExtraUrl = imageExtraUrl
         }
-
 
         let updateProduct = await ProductSchema.findByIdAndUpdate({ _id: id }, { $set: wholeUpdate }, { new: true })
         res.status(200).json({ message: presignedArray })

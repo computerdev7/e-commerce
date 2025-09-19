@@ -9,15 +9,16 @@ import AddProduct from "./pages/vendorpages/addProductPage.jsx"
 import UpdateProduct from "./pages/vendorpages/updateProductPage.jsx"
 import Cart from "./pages/userpages/cart.jsx"
 import SearchPage from "./pages/userpages/searchPage.jsx"
-import MainHomePage from "./pages/vendorpages/mainPage.jsx"
 import ProductPage from "./pages/userpages/productPage.jsx"
+import UserOrder from "./pages/userpages/userOrders.jsx"
+import VendorInventory from "./pages/vendorpages/vendorInventory.jsx"
 
 export default function App() {
 
   return (
       <>
       <Routes>
-          <Route path="/userhome" element={<Home/>} />
+          <Route path="/" element={<Home/>} />
           <Route path="/vendorhome" element={<VendorHome/>} />
           <Route path="/usersignup" element={<Signup/>} />
           <Route path="/userlogin" element={<Login/>} />
@@ -27,8 +28,9 @@ export default function App() {
           <Route path="/updateproduct/:id" element={<UpdateProduct/>} />
           <Route path="/cart" element={<Cart/>} />
           <Route path="/searchpage" element={<SearchPage/>} />
-          <Route path="/vendormain" element={<MainHomePage/>} />
           <Route path="/productpage" element={<ProductPage/>} />
+          <Route path="/userorder" element={<UserOrder/>} />
+          <Route path="/vendorinventory" element={<VendorInventory/>} />
       </Routes>
       </>
   )

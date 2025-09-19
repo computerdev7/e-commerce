@@ -23,6 +23,14 @@ export default function VendorHome() {
 
   return (
     <>
+    <button
+    className="p-3 border absolute left-3 top-3"
+    onClick={()=> {
+      navigate('/userhome')
+    }}
+    >
+      back to site
+    </button>
       <div className="h-screen w-screen flex justify-center flex-col gap-3 p-8">
         <p className="text-center mt-3.5 font-bold w-full text-5xl">Welcome Vendors</p>
         <div className="w-full max-h-3/12 gap-3 flex justify-center items-center flex-col p-3">
