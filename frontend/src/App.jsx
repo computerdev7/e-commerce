@@ -11,7 +11,7 @@ import Cart from "./pages/userpages/cart.jsx"
 import SearchPage from "./pages/userpages/searchPage.jsx"
 import ProductPage from "./pages/userpages/productPage.jsx"
 import UserOrder from "./pages/userpages/userOrders.jsx"
-import VendorInventory from "./pages/vendorpages/vendorInventory.jsx"
+import VendorOrders from "./pages/vendorpages/vendorOrders.jsx"
 
 export default function App() {
 
@@ -30,7 +30,7 @@ export default function App() {
           <Route path="/searchpage" element={<SearchPage/>} />
           <Route path="/productpage" element={<ProductPage/>} />
           <Route path="/userorder" element={<UserOrder/>} />
-          <Route path="/vendorinventory" element={<VendorInventory/>} />
+          <Route path="/vendororder" element={<VendorOrders/>} />
       </Routes>
       </>
   )

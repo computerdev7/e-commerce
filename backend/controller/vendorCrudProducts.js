@@ -47,8 +47,6 @@ export async function addProduct(req, res) {
             imageExtraUrl.push(obj)
         }
         let updateProduct = await ProductSchema.findByIdAndUpdate({ _id: saveProduct._id }, { imageUrl: imageUrl , imageExtraUrl : imageExtraUrl})
-        
-        console.log(updateProduct)
 
         let presignedArray = [];
 

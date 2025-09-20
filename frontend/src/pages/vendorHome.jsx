@@ -26,7 +26,7 @@ export default function VendorHome() {
     <button
     className="p-3 border absolute left-3 top-3"
     onClick={()=> {
-      navigate('/userhome')
+      navigate('/')
     }}
     >
       back to site

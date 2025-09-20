@@ -42,7 +42,7 @@ export default function SearchPage() {
                                 <input className="border border-white"
                                     value={searchText} onChange={(e) => {
 
-                                        if (e.currentTarget.value != 0) { //search suggestion
+                                        if (e.currentTarget.value != 0) { 
                                             searchSuggestion(e.currentTarget.value)
                                                 .then(res => setSearchSuggest(res))
                                         } else {
@@ -51,16 +51,21 @@ export default function SearchPage() {
 
                                         setSearchText(e.currentTarget.value)
 
-                                        searchProduct(e.currentTarget.value, 1, chooseCategory, choosePrice)
-                                            .then(res => setProduct(res.data.message))
-                                        setPage(1)
+                                        if(!/^\s*$/.test(e.currentTarget.value)){
+                                            searchProduct(e.currentTarget.value, 1, chooseCategory, choosePrice)
+                                                .then(res => setProduct(res.data.message))
+                                            setPage(1)
+                                        }
+
                                     }} />
                                 <SearchSuggestion searchSuggest={searchSuggest} setSearchSuggest={setSearchSuggest} setSearchText={setSearchText} />
                             </div>
                             <button
                                 onClick={() => {
-                                    searchProduct(searchText, page, chooseCategory, choosePrice)
-                                        .then(res => setProduct(res.data.message))
+                                    if(/^\s*$/.test(searchText)){
+                                        searchProduct('', page, chooseCategory, choosePrice)
+                                            .then(res => setProduct(res.data.message))
+                                    }
                                 }}
                             >Search</button>
                             <button

@@ -1,5 +1,5 @@
 import ProductSchema from "../model/productModel.js";
-
+import client from "../database/redis.js";
 
 export async function userSearch(req,res){
     
@@ -41,18 +41,33 @@ export async function userSearch(req,res){
         sort = {price : 1}
     }
 
-    try{
+    try{    
+
+        if(cat == '' || cat == 'choose category' && q == ''){
+            let cacheValue = await client.get('usersearchresult')
+            if(cacheValue){
+                let parse = JSON.parse(cacheValue)
+                return res.status(200).json({message : parse})
+            } else {
+                data = await ProductSchema.find(filter).skip(skip).limit(10).sort(sort);
+                let stringify = JSON.stringify(data)
+                await client.set('usersearchresult',stringify, {EX : 120})
+            }
+        }
+
          if(q.length < 4){
            
             data = await ProductSchema.find(filter).skip(skip).limit(10).sort(sort);
+
         } else {
            
             data = await ProductSchema.find(filter1).skip(skip).limit(10).sort(sort);
-            console.log(data)
+            
         }
 
         res.status(200).json({message : data})
     }catch(err){
+        console.log(err)
         res.status(500).json({message : err})
     }
 
@@ -60,6 +75,7 @@ export async function userSearch(req,res){
 
 export async function searchSuggestion(req,res){
 
+    // add category filter to get more personlized serach results
     let q = req.query.q
     
     try{

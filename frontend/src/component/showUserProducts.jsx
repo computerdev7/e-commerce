@@ -1,8 +1,10 @@
 import userProductStore from "../stores/userProductStore";
+import { useNavigate } from "react-router";
 
 export default function ShowUserProducts({ setPage, page, searchText, chooseCategory, choosePrice, setProduct, product }) {
 
     let { searchProduct, addToCart } = userProductStore();
+    let navigate = useNavigate();
 
     function handleScroll(e) { 
         const { scrollTop, clientHeight, scrollHeight } = e.currentTarget
@@ -21,7 +23,11 @@ export default function ShowUserProducts({ setPage, page, searchText, chooseCate
     let renderProduct = product?.map((res) => { 
         return (
             <>
-                <div className="h-50 w-50 bg-amber-300 p-2">
+                <div
+                onClick={()=> {
+                    navigate('/productpage',{state : {id : res._id}})
+                }}
+                className="h-50 w-50 bg-amber-300 p-2">
                     <div className="w-full h-2/3 overflow-hidden">
                         <img className="object-contain" src={res.imageUrl.image300} />
                     </div>

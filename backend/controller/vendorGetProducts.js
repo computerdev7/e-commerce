@@ -1,4 +1,5 @@
 import ProductSchema from "../model/productModel.js";
+import client from "../database/redis.js";
 
 export async function getAllProducts(req,res) {
 
@@ -17,7 +18,7 @@ export async function getAllProducts(req,res) {
     } else {
         sort = { price: 1 }
     }
-
+    
     let filter = {
         product_owner: data.slice(1, -1),
         product_name: pn.length < 4 ? { $regex: `^${pn}`, $options: 'i' } : regex,
@@ -30,7 +31,19 @@ export async function getAllProducts(req,res) {
         }
     }
 
+    if(pn == '' && p == 'select price' || p == '' && cat == 'select categories' || cat == '' ){
+        let cacheValue = await client.get('vendorsearchproducts')
+        if(cacheValue){
+            let parse = JSON.parse(cacheValue)
+            return res.status(200).json({message : parse})
+        } else {
+            let getProducts = await ProductSchema.find(filter).skip(skip).limit(10).sort(sort);
+            let stringify = JSON.stringify(getProducts)
+            await client.set('vendorsearchproducts', stringify, {EX : 60})
+        }
+    }
     try {
+
         let getProducts = await ProductSchema.find(filter).skip(skip).limit(10).sort(sort);
         res.status(200).json({ message: getProducts })
 

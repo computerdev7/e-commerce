@@ -17,7 +17,7 @@ export default function VendorSearchDCat({setCategoryName, categoryName, setPric
 
     }, [])
 
-    useEffect(() => { //this
+    useEffect(() => { 
 
     let value = (e) => {
       if(!refSearchSuggest.current.contains(e.target)){

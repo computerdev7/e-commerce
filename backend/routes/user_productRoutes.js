@@ -11,11 +11,11 @@ import { searchSuggestion, userSearch } from '../controller/userSearchController
 let route = express.Router()
 
 
-route.get('/getCategories',checkCookie,CheckUserType('user'),getCategories)
+route.get('/getCategories',getCategories)
 
-route.get('/getAllProducts',checkCookie,CheckUserType('user'),getAllProducts)
+route.get('/getAllProducts',getAllProducts)
 
-route.get('/getProduct',checkCookie,CheckUserType('user'),getProduct)
+route.get('/getProduct',getProduct)
 
 
 route.post('/addtocart',checkCookie,CheckUserType('user'),addtocart)
@@ -26,9 +26,9 @@ route.delete('/removefromcart',checkCookie,CheckUserType('user'),removeFromCart)
 
 
 
-route.get('/search',checkCookie,CheckUserType('user'),userSearch)
+route.get('/search',userSearch)
 
-route.get('/searchsuggestion',checkCookie,CheckUserType('user'),searchSuggestion)
+route.get('/searchsuggestion',searchSuggestion)
 
 
 export default route

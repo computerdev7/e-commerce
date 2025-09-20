@@ -6,20 +6,20 @@ import ProductSchema from "../model/productModel.js"
 
 let route = express.Router();
 
-// pagination on vendor
-
 route.get('/getorders',checkCookie, CheckUserType('vendor'), async(req, res)=> {
     
     let id = req.user._id
     let custId = JSON.stringify(id).slice(1,-1)
     let order = req.query.o
+    let page = req.query.p
+    let skip = (page - 1) * 10
 
     try{
         let getOrders;
         if(order == 'all'){
-            getOrders = await orderSchema.find({vendor_id : custId}).populate('product_id')
+            getOrders = await orderSchema.find({vendor_id : custId}).populate('product_id').skip(skip).limit(10)
         } else {
-            getOrders = await orderSchema.find({vendor_id : custId, vendor_state : order}).populate('product_id')
+            getOrders = await orderSchema.find({vendor_id : custId, vendor_state : order}).populate('product_id').skip(skip).limit(10)
         }
 
         res.status(200).json({message : getOrders})

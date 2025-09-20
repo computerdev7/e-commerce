@@ -21,7 +21,7 @@ export default function VendorRendorProduct({ setPage, setProducts, productName,
   }
 
   let renderProduct = (products.length > 0 ?
-    products.map((e, i) => {
+    products?.map((e, i) => {
 
       return (
         <>

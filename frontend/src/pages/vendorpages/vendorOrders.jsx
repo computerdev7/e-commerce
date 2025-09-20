@@ -1,22 +1,30 @@
 import { useEffect, useState } from "react"
 import axios from "axios"
 
-export default function VendorInventory() {
+export default function VendorOrders() {
 
     let [orderProducts, setOrderProducts] = useState([]);
     let [selectFilter, setSelectFilter] = useState('all');
-    let [page,setPage] = useState(1)
+    let [page,setPage] = useState(1);
 
     function handleScroll(e) {
         let {clientHeight,scrollHeight,scrollTop} = e.target
         if(clientHeight + scrollTop >= scrollHeight) {
-            console.log('run')
+            setPage(prev=> ++prev);
+            axios.get(`http://localhost:3000/vendororder/getorders?o=${selectFilter}&p=${page + 1}`, {
+            withCredentials: true
+        })
+            .then(res => {
+                if(res.data.message.length != 0){
+                    setOrderProducts(prev=> [...prev,res.data.message])
+                }
+            })
         }
     }
 
     useEffect(() => {
 
-        axios.get(`http://localhost:3000/vendororder/getorders?o=${selectFilter}`, {
+        axios.get(`http://localhost:3000/vendororder/getorders?o=${selectFilter}&p=${page}`, {
             withCredentials: true
         })
             .then(res => setOrderProducts(res.data.message))
@@ -95,10 +103,12 @@ export default function VendorInventory() {
     }
 
     function applyFilter(selectFilter) {
-        axios.get(`http://localhost:3000/vendororder/getorders?o=${selectFilter}`, {
+        axios.get(`http://localhost:3000/vendororder/getorders?o=${selectFilter}&p=${1}`, {
             withCredentials: true
         })
             .then(res => setOrderProducts(res.data.message))
+        
+        setPage(1)
     }
 
     let renderOrders = orderProducts?.map((e) => {
