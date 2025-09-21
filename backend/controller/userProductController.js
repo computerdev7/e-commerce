@@ -45,7 +45,7 @@ export async function getAllProducts(req, res) {
 
             let stringify = JSON.stringify(sendArr)
 
-            await client.set('result',stringify, {EX : 10})
+            await client.set('result',stringify, {EX : 60})
 
             res.status(200).json({ message: sendArr })
         }

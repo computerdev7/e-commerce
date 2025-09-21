@@ -1,11 +1,13 @@
 import { useRef } from "react";
 import userProductStore from "../stores/userProductStore";
 import { useNavigate } from "react-router";
+import store_util from "../stores/store_util";
 
 export default function RenderProductCat({ productArray, category }) {
 
     let scrollRef = useRef(null);
     let { addToCart } = userProductStore()
+    let {setProduct_id} = store_util();
     let navigate = useNavigate()
 
     function scroll(dir) {
@@ -26,7 +28,7 @@ export default function RenderProductCat({ productArray, category }) {
             <>
                 <div
                 onClick={()=> {
-                    navigate('/productpage',{state : {id : el._id}})
+                    setProduct_id({id : el._id, cond : true})
                 }}
                 className="min-h-48 w-48 flex-shrink-0 bg-amber-600 rounded-2xl flex justify-center items-center flex-col overflow-hidden">
                     <div className="h-33 w-full overflow-hidden">

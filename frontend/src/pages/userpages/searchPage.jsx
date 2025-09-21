@@ -4,6 +4,8 @@ import userProductStore from "../../stores/userProductStore";
 import FilterSearchPage from "../../component/filterSearchPage.jsx";
 import SearchSuggestion from "../../component/searchSuggestion.jsx";
 import ShowUserProducts from "../../component/showUserProducts.jsx";
+import store_util from "../../stores/store_util.jsx"
+import ProductPage from "./productPage.jsx";
 
 export default function SearchPage() {
 
@@ -17,7 +19,9 @@ export default function SearchPage() {
     let [chooseCategory, setChooseCategory] = useState('')
     let [choosePrice, setChoosePrice] = useState('')
     let [searchSuggest, setSearchSuggest] = useState([])
+    let { product_id, setProduct_id } = store_util()
 
+    console.log(product_id)
 
     useEffect(() => {
         if (location.state?.category) {
@@ -31,8 +35,30 @@ export default function SearchPage() {
         }
     }, [])
 
+    console.log(product)
+
+    function onSearchInputChange(e) {
+
+        if (e.currentTarget.value != 0) {
+            searchSuggestion(e.currentTarget.value)
+                .then(res => setSearchSuggest(res))
+        } else {
+            setSearchSuggest([])
+        }
+
+        setSearchText(e.currentTarget.value)
+
+        if (!/^\s*$/.test(e.currentTarget.value)) {
+            searchProduct(e.currentTarget.value, 1, chooseCategory, choosePrice)
+                .then(res => setProduct(res.data.message))
+            setPage(1)
+        }
+    }
+
     return (
-        <>
+        <> {product_id.cond ?
+            <ProductPage id={product_id.id} />
+            :
             <div className="h-screen w-screen overflow-hidden">
                 <div className="min-h-1/12 w-full bg-gray-800 flex flex-col gap-4 items-center p-5 text-white">
                     <div className="w-full h-1/12 flex justify-between">
@@ -41,28 +67,13 @@ export default function SearchPage() {
                             <div className="w-2/4 relative">
                                 <input className="border border-white"
                                     value={searchText} onChange={(e) => {
-
-                                        if (e.currentTarget.value != 0) { 
-                                            searchSuggestion(e.currentTarget.value)
-                                                .then(res => setSearchSuggest(res))
-                                        } else {
-                                            setSearchSuggest([])
-                                        }
-
-                                        setSearchText(e.currentTarget.value)
-
-                                        if(!/^\s*$/.test(e.currentTarget.value)){
-                                            searchProduct(e.currentTarget.value, 1, chooseCategory, choosePrice)
-                                                .then(res => setProduct(res.data.message))
-                                            setPage(1)
-                                        }
-
+                                        onSearchInputChange(e);
                                     }} />
                                 <SearchSuggestion searchSuggest={searchSuggest} setSearchSuggest={setSearchSuggest} setSearchText={setSearchText} />
                             </div>
                             <button
                                 onClick={() => {
-                                    if(/^\s*$/.test(searchText)){
+                                    if (/^\s*$/.test(searchText)) {
                                         searchProduct('', page, chooseCategory, choosePrice)
                                             .then(res => setProduct(res.data.message))
                                     }
@@ -93,9 +104,10 @@ export default function SearchPage() {
                         >Browse Product or Category</h1>
                         :
                         <ShowUserProducts setPage={setPage} page={page} searchText={searchText} chooseCategory={chooseCategory} choosePrice={choosePrice} setProduct={setProduct} product={product} />
-                        }
+                    }
                 </div>
             </div>
+        }
         </>
     )
 }

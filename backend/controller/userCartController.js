@@ -6,7 +6,6 @@ export async function addtocart(req, res) {
 
     try {
         let findDataInCart = await authSchema.find({_id: userId},{cart : {$elemMatch : {$eq: id}}})
-        console.log(findDataInCart[0].cart.length, findDataInCart[0].cart)
         if(findDataInCart[0].cart.length == 0){
 
             let data = await authSchema.findByIdAndUpdate({ _id: userId }, { $push: { cart: id } }, { new: true })

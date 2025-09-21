@@ -31,7 +31,7 @@ export async function getAllProducts(req,res) {
         }
     }
 
-    if(pn == '' && p == 'select price' || p == '' && cat == 'select categories' || cat == '' ){
+    if(pn == '' && (p == 'select price' || p == '') && (cat == 'select categories' || cat == '' ) && page == 1){
         let cacheValue = await client.get('vendorsearchproducts')
         if(cacheValue){
             let parse = JSON.parse(cacheValue)

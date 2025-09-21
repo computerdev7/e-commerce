@@ -110,12 +110,13 @@ export default function ProductStructure({ func, getFunc, type, id }) {
             getFunc(id)
                 .then(res => {
                     console.log(res.data.message)
-                    setFormData(prev => ({ ...prev, productName: res.data.message[0].product_name }))
-                    setFormData(prev => ({ ...prev, productPrice: res.data.message[0].price }))
-                    setFormData(prev => ({ ...prev, desc: res.data.message[0].product_desc }))
-                    setFormData(prev => ({ ...prev, category: res.data.message[0].category }))
-                    setFormData(prev => ({ ...prev, subCategory: res.data.message[0].sub_category }))
-                    setFormData(prev => ({ ...prev, quantity: res.data.message[0].quantity }))
+                    setFormData(prev => ({ ...prev, 
+                        productName: res.data.message[0].product_name, 
+                        productPrice : res.data.message[0].price,
+                        desc : res.data.message[0].product_desc, 
+                        category : res.data.message[0].category, 
+                        subCategory : res.data.message[0].sub_category,
+                        quantity : res.data.message[0].quantity }))
                     setShortDetailInput(res.data.message[0].product_short_details)
                     setLongDetailInput(res.data.message[0].product_long_details)
                 })

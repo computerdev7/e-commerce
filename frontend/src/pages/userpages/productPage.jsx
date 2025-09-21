@@ -1,36 +1,36 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useMemo } from "react";
 import userProductStore from "../../stores/userProductStore"
-import { useLocation } from "react-router";
 import axios from "axios";
+import store_util from "../../stores/store_util";
 
-export default function ProductPage() {
+export default function ProductPage({ id }) {
 
-    let { getUserProduct,addToCart } = userProductStore();
-    let location = useLocation()
+    let { getUserProduct, addToCart } = userProductStore();
     let [wholeData, setWholeData] = useState([]);
     let [showImageCarousal, setImageCarousal] = useState(0);
     let [mainImageArr, setMainImageArr] = useState([]);
     let carousalImage = useRef();
+    let { setProduct_id } = store_util();
 
-    async function checkOut(){
-        let order = await axios.post('http://localhost:3000/userorder/create-order',{id : location.state.id },{
-            withCredentials : true
+    async function checkOut() {
+        let order = await axios.post('http://localhost:3000/userorder/create-order', { id: id }, {
+            withCredentials: true
         })
 
         let realD = order.data.message;
 
         let options = {
-            key : "rzp_test_RGQBIFQYDaThcn",
-            amount : realD.amount,
-            currency : realD.currency,
-            name : 'test',
-            order_id : realD.id,
-            handler : async function(response){
-                let checkPayment = await axios.post('http://localhost:3000/userorder/check-order',{response, id : location.state.id },{
-                    withCredentials : true
+            key: "rzp_test_RGQBIFQYDaThcn",
+            amount: realD.amount,
+            currency: realD.currency,
+            name: 'test',
+            order_id: realD.id,
+            handler: async function (response) {
+                let checkPayment = await axios.post('http://localhost:3000/userorder/check-order', { response, id: id }, {
+                    withCredentials: true
                 })
 
-                if(checkPayment.status == 200){
+                if (checkPayment.status == 200) {
                     console.log('payment successfull')
                 } else {
                     console.log("payment unsuccessfull")
@@ -42,14 +42,12 @@ export default function ProductPage() {
 
     }
 
-
     useEffect(() => {
-        getUserProduct(location.state.id)
+        getUserProduct(id)
             .then(res => {
                 setWholeData(res.data.message[0])
                 setMainImageArr([...res.data.message[0].imageExtraUrl, { image800: res.data.message[0].imageUrl.image800 }])
             })
-
     }, [])
 
     function changeImage(t) {
@@ -71,7 +69,6 @@ export default function ProductPage() {
                 }
             })
         }
-
     }
 
     useEffect(() => {
@@ -80,35 +77,49 @@ export default function ProductPage() {
 
     }, [showImageCarousal])
 
-    console.log(wholeData)
+    let renderShortDetails = useMemo(() => {
+        return wholeData?.product_short_details?.map((el) => {
+            return (
+                <>
+                    <div className="flex w-full justify-around items-center">
+                        <p>{el.input1}</p>
+                        <p>{el.input2}</p>
+                    </div>
+                </>
+            )
+        })
+    },
+        [wholeData]
+    )
 
-    let renderShortDetails = wholeData?.product_short_details?.map((el) => {
-        return (
-            <>
-                <div className="flex w-full justify-around items-center">
-                    <p>{el.input1}</p>
-                    <p>{el.input2}</p>
-                </div>
-            </>
-        )
-    })
-
-    let renderLongDetails = wholeData?.product_long_details?.map((el) => {
-        return (
-            <>
-                <li className="">
-                    {el}
-                </li>
-            </>
-        )
-    })
+    let renderLongDetails = useMemo(() => {
+        return wholeData?.product_long_details?.map((el) => {
+            return (
+                <>
+                    <li className="">
+                        {el}
+                    </li>
+                </>
+            )
+        })
+    },
+        [wholeData]
+    )
 
     return (
         <>
             <div className="w-screen min-h-screen">
                 <div className="w-full h-[500px] bg-amber-300 flex items-center justify-center ">
                     <div className="h-full w-3/5 bg-amber-100 ">
-                        <div className="h-11/12 w-full bg-amber-400 flex items-center justify-center">
+                        <div className="w-full h-1/12 pl-3 flex items-center ">
+                            <button className="border p-1"
+                                onClick={() => {
+                                    setProduct_id({ id: '', cond: false });
+                                }}>
+                                Back
+                            </button>
+                        </div>
+                        <div className="h-10/12 w-full bg-amber-400 flex items-center justify-center">
                             <img className="max-h-5/6 max-w-5/6" ref={carousalImage} src={wholeData?.imageUrl?.image800} />
                         </div>
                         <div className="w-full h-1/12 flex items-center justify-center gap-5 bg-red-200">
@@ -143,21 +154,21 @@ export default function ProductPage() {
                             </ul>
                         </div>
                         <div className="flex justify-between items-center w-full h-1/12">
-                            <button 
-                            onClick={()=> {
-                                addToCart(wholeData._id)
-                            }}
-                            className="border">
+                            <button
+                                onClick={() => {
+                                    addToCart(wholeData._id)
+                                }}
+                                className="border">
                                 Add to Cart
                             </button>
-                            <button 
-                            onClick={()=> {
-                                if(wholeData?.quantity != '0'){
-                                    checkOut();
-                                }
-                            }}
-                            className="border">
-                               {wholeData?.quantity <= 0? 'Sold out' : 'Buy now'}
+                            <button
+                                onClick={() => {
+                                    if (wholeData?.quantity != '0') {
+                                        checkOut();
+                                    }
+                                }}
+                                className="border">
+                                {wholeData?.quantity <= 0 ? 'Sold out' : 'Buy now'}
                             </button>
                         </div>
                     </div>

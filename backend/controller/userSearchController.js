@@ -43,7 +43,7 @@ export async function userSearch(req,res){
 
     try{    
 
-        if(cat == '' || cat == 'choose category' && q == ''){
+        if((cat == '' || cat == 'choose category') && q == '' && page == 1){
             let cacheValue = await client.get('usersearchresult')
             if(cacheValue){
                 let parse = JSON.parse(cacheValue)
