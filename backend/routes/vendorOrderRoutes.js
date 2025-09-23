@@ -2,117 +2,22 @@ import express from "express"
 import orderSchema from "../model/orderModel.js"
 import checkCookie from "../middleware/checkCookies.js"
 import CheckUserType from "../middleware/checkUserType.js"
-import ProductSchema from "../model/productModel.js"
+import { getOrders, setAvailable, packaged, cancelOrder, delivery, getDelivery, refundDelivery } from "../controller/vendorCheckOut.js"
 
 let route = express.Router();
 
-route.get('/getorders',checkCookie, CheckUserType('vendor'), async(req, res)=> {
-    
-    let id = req.user._id
-    let custId = JSON.stringify(id).slice(1,-1)
-    let order = req.query.o
-    let page = req.query.p
-    let skip = (page - 1) * 10
+route.get('/getorders',checkCookie, CheckUserType('vendor'),getOrders)
 
-    try{
-        let getOrders;
-        if(order == 'all'){
-            getOrders = await orderSchema.find({vendor_id : custId}).populate('product_id').skip(skip).limit(10)
-        } else {
-            getOrders = await orderSchema.find({vendor_id : custId, vendor_state : order}).populate('product_id').skip(skip).limit(10)
-        }
+route.put('/setavailable', checkCookie, CheckUserType('vendor'),setAvailable)
 
-        res.status(200).json({message : getOrders})
+route.put('/packaged',checkCookie, CheckUserType('vendor'),packaged)
 
-    }catch(err){
-        console.log(err)
-        res.status(500).json({message : err})
-    }
-})
+route.delete('/confirmordercancel',checkCookie, CheckUserType('vendor'),cancelOrder)
 
-route.put('/setavailable', async(req,res)=> {
+route.put('/delivery',checkCookie, CheckUserType('vendor'),delivery)
 
-    let id = req.query.id
-    let cond = req.query.cond
+route.put('/getdelivery',checkCookie, CheckUserType('vendor'),getDelivery)
 
-    console.log(cond, typeof(cond))
-
-    try{
-        let setavailable;
-
-        if(cond != 'false'){
-            setavailable = await orderSchema.findByIdAndUpdate({_id : id},{available : cond, state : 'packaging'})
-        } else {
-            setavailable = await orderSchema.findByIdAndUpdate({_id : id},{available : cond})
-        }
-
-
-        res.status(201).json({message : setavailable})
-
-    }catch(err){
-        console.log(err)
-        res.status(500).json({message : err})
-    }
-
-})
-
-route.put('/packaged',async (req,res)=> {
-
-    let id = req.query.id
-
-    try{
-        let data = await orderSchema.findByIdAndUpdate({_id : id},{state : 'packaged'})
-    }catch(err){
-        console.log(err)
-        res.status(500).json({message : err})
-    }
-})
-
-route.delete('/confirmordercancel',async(req,res)=> {
-
-    let id = req.query.id
-
-    try{
-        let removeOrder = await orderSchema.findByIdAndDelete({_id : id})
-        res.status(201).json({message : removeOrder})
-    }catch(err){
-        res.status(500).json({message : err})
-    }
-})
-
-route.put('/delivery',async(req,res)=> {
-
-    let id = req.query.id
-
-    try{
-        let delivery = await orderSchema.findByIdAndUpdate({_id : id}, {state : 'on delivery', vendor_state : 'success'})
-        res.status(201).json({message : delivery})
-    }catch(err){
-        res.status(500).json({message : err})
-    }
-})
-
-route.put('/getdelivery',async(req,res)=> {
-
-    let id = req.query.id
-
-    try{
-        let delivery = await orderSchema.findByIdAndUpdate({_id : id}, {state : 'delivered'})
-        res.status(201).json({message : delivery})
-    }catch(err){
-        res.status(500).json({message : err})
-    }
-})
-
-route.put('/refunddelivered',async(req,res)=> {
-     let id = req.query.id
-
-    try{
-        let delivery = await orderSchema.findByIdAndUpdate({_id : id}, {isRefunded : true})
-        res.status(201).json({message : delivery})
-    }catch(err){
-        res.status(500).json({message : err})
-    }
-})
+route.put('/refunddelivered',checkCookie, CheckUserType('vendor'),refundDelivery)
 
 export default route;

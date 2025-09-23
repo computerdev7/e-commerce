@@ -11,9 +11,10 @@ export default function ProductPage({ id }) {
     let [mainImageArr, setMainImageArr] = useState([]);
     let carousalImage = useRef();
     let { setProduct_id } = store_util();
+    let [quantity, setQuantity] = useState(1);
 
     async function checkOut() {
-        let order = await axios.post('http://localhost:3000/userorder/create-order', { id: id }, {
+        let order = await axios.post('http://localhost:3000/userorder/create-order', { id: id, quantity }, {
             withCredentials: true
         })
 
@@ -26,7 +27,7 @@ export default function ProductPage({ id }) {
             name: 'test',
             order_id: realD.id,
             handler: async function (response) {
-                let checkPayment = await axios.post('http://localhost:3000/userorder/check-order', { response, id: id }, {
+                let checkPayment = await axios.post('http://localhost:3000/userorder/check-order', { response, id: id, quantity }, {
                     withCredentials: true
                 })
 
@@ -161,6 +162,7 @@ export default function ProductPage({ id }) {
                                 className="border">
                                 Add to Cart
                             </button>
+                            <input className="border w-14" type="number" value={quantity} onChange={(e)=> setQuantity(e.currentTarget.value) }/>
                             <button
                                 onClick={() => {
                                     if (wholeData?.quantity != '0') {

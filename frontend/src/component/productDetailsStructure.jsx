@@ -19,7 +19,7 @@ export default function ProductStructure({ func, getFunc, type, id }) {
         desc: '',
         quantity: ''
     })
-    let [showLoading, setShowLoading] = useState(true)
+    let [showLoading, setShowLoading] = useState(false)
     let [categoryArray, setCategoryArray] = useState([])
     let navigate = useNavigate()
     let [shortDetailInput, setShortDetailInput] = useState([{
@@ -33,6 +33,7 @@ export default function ProductStructure({ func, getFunc, type, id }) {
         to: undefined
     })
     let [showImages, setShowImages] = useState(false)
+    let [updateImages , setUpdateImages] = useState(false)
 
     let handleInput = (lable) => (e) =>
         setFormData((prev) => ({ ...prev, [lable]: e.target.value }));
@@ -202,20 +203,34 @@ export default function ProductStructure({ func, getFunc, type, id }) {
                     <div className="w-full flex justify-between items-center">
                         <div className="w-1/2 flex items-center gap-2">
                             <p>Choose multiple images</p>
-                            <input type="file" className="border p-2 w-3/6" onChange={async (e) => {
+                            <input disabled={updateImages? false : true} type="file" className="border p-2 w-3/6" onChange={async (e) => {
                                 numberOfImages.current = e.currentTarget.files.length
-                                setShowLoading(true)
-                                setShowImages(true)
-                                setImageData(Array.from(e.currentTarget.files))
+                                if(type != 'UPDATE' && !updateImages){
+                                    setShowLoading(true)
+                                    setShowImages(true)
+                                    setImageData(Array.from(e.currentTarget.files))
+                                }
                             }} required multiple />
                         </div>
+                        { type == 'UPDATE' &&
+                        <button 
+                        onClick={()=> {
+                            setUpdateImages(prev=> !prev)
+                        }}
+                        className="p-2 border">
+                            {updateImages? "update images : true" : 'update images : false'}
+                        </button>
+                        }
                         <button disabled={showLoading ? true : false} className="border border-b p-2 w-32 disabled:border-gray-500 disabled:text-gray-600"
                             onClick={() => {
-                                func(formData.productName, formData.productPrice, id, formData.category, formData.subCategory, formData.desc, shortDetailInput, longDetailInput, numberOfImages.current, formData.quantity)
+                                func(formData.productName, formData.productPrice, id, formData.category, formData.subCategory, formData.desc, shortDetailInput, longDetailInput, numberOfImages.current, formData.quantity, updateImages)
                                     .then(res => {
-                                        console.log(res.data.message, imageData)
-                                        putImageOnS3(res.data.message, imageData)
-                                            .then(res => navigate('/vendorhome'))
+                                        if(type != 'UPDATE' && !updateImages ){
+                                            putImageOnS3(res.data.message, imageData)
+                                                .then(res => navigate('/vendorhome'))
+                                        } else {
+                                            navigate('/vendorhome')
+                                        }
                                     })
                             }}
                         >{type}</button>

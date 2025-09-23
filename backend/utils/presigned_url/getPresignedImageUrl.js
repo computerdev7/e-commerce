@@ -36,9 +36,9 @@ export async function getPreSignedImageUrl(username,filename){
 export async function getDeletePreSignedUrl(username,filename,extraImage){
 
     let sizes = [300,800,1600]
-
+// deleting main image(3 copies for main image)
     for(let i = 0; i < 3; i++){
-        console.log(`vendor-product/${username}/${filename}${sizes[i]}.webp`)
+        
         const command = new DeleteObjectCommand({
             Bucket : 'e-commerce-image',
             Key : `vendor-product/${username}/${filename}${sizes[i]}.webp`,
@@ -50,11 +50,11 @@ export async function getDeletePreSignedUrl(username,filename,extraImage){
             console.log(err)
         }
     }
-
+// deleting extra image (2 copy for each images)
     for(let i = 1; i <= extraImage.length; i++){
 
         for(let j = 1; j < 3; j++) {
-            console.log(`vendor-product/${username}/${filename}${i}${sizes[j]}.webp`)
+            
             const command = new DeleteObjectCommand({
                Bucket : 'e-commerce-image',
                Key : `vendor-product/${username}/${filename}${i}${sizes[j]}.webp`,

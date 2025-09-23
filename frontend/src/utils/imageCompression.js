@@ -1,9 +1,9 @@
 import imageCompression from 'browser-image-compression';
 
 export async function compressImage(e) {
-    let imageFile = e[0]
     let imageFiles = e;
 
+    // checking the numbers of images
     if(e.length > 6 || e.length < 4){
         return 2;
     }
@@ -12,11 +12,14 @@ export async function compressImage(e) {
         return new Promise((resolve, reject) => {
             const img = new Image();
 
-            img.src = URL.createObjectURL(file)
+            let src = URL.createObjectURL(file);
+            img.src = src;
 
             img.onload = async () => {
                 resolve({width : img.width, height: img.height})
+                URL.revokeObjectURL(src)
             }
+
             img.onerror = reject;
         })
     }
@@ -37,8 +40,9 @@ export async function compressImage(e) {
 
 
     let sizes = [300, 800, 1600];
-
     let compressImageArr = [];
+
+    // compressing main image
     for (let i = 0; i < 3; i++) {
         const options = {
             maxSizeMB: 0.3,
@@ -46,11 +50,13 @@ export async function compressImage(e) {
             useWebWorker: true
         }
 
-        let compressimg = await imageCompression(imageFile, options).then(res => {
+        await imageCompression(imageFiles[0], options).then(res => {
             compressImageArr.push(res)
         })
 
     }
+
+    // compressing other images
     for (let i = 1; i < imageFiles.length; i++) {
         for (let j = 1; j < 3; j++) {
 
@@ -60,13 +66,13 @@ export async function compressImage(e) {
                 useWebWorker: true
             }
 
-            let compressimg = await imageCompression(imageFiles[i], options).then(res => {
+            await imageCompression(imageFiles[i], options).then(res => {
                 compressImageArr.push(res)
             })
         }
 
     }
-    console.log(compressImageArr)
+    
     return compressImageArr
 
 }

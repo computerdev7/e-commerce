@@ -92,13 +92,13 @@ export async function deleteProduct(req, res) {
 export async function updateProduct(req, res) {
 
     let id = req.body.id
-    let { imagesNo } = req.body
+    let { imagesNo, update } = req.body
     let userid = req.user._id
     let wholeUpdate = req.body
     let presignedArray = [];
     
     try {
-        if (imagesNo > 0) {
+        if (update && imagesNo > 0) {
             let getProducts = await ProductSchema.find({ _id: id })
             await getDeletePreSignedUrl(userid, `${getProducts[0]._id}`, getProducts[0].imageExtraUrl)
             
@@ -129,7 +129,11 @@ export async function updateProduct(req, res) {
         }
 
         let updateProduct = await ProductSchema.findByIdAndUpdate({ _id: id }, { $set: wholeUpdate }, { new: true })
-        res.status(200).json({ message: presignedArray })
+        if(update){
+            res.status(200).json({ message: presignedArray })
+        } else {
+            res.status(200).json({ message: updateProduct })
+        }
     } catch (err) {
         console.log(err)
         res.status(500).json({ message: 'error in updating product', err })

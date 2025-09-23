@@ -2,7 +2,10 @@ import authSchema from "../model/authModel.js"
 import bcrypt from "bcryptjs"
 
 export async function signup(req, res, next) {
+   
     let { username, password, usertype } = req.body
+    let checkUniqueChar = /[@#$%&]/.test(username)
+    let checkSpaces = /^\s+$/.test(username)
 
     try {
 
@@ -10,6 +13,14 @@ export async function signup(req, res, next) {
 
         if (findUser.length != 0) {
             return res.status(401).json({ message: 'User already Exists' })
+        }
+
+        if(username.length < 5 || username.length > 15 || password.length < 5 || password.length > 15){
+            return res.status(403).json({message : 'username or password lengths are inappropriate'})
+        } else if(!checkUniqueChar){
+            return res.status(403).json({message : 'include one unique charachters'})
+        } else if(checkSpaces){
+            return res.status(403).json({message : 'please right charachter instead of spaces'})
         }
 
         let salt = await bcrypt.genSalt(10);

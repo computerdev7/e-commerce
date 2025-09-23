@@ -16,7 +16,7 @@ let productStore = create((set, get) => ({
                 shortDetailInput,
                 longDetailInput,
                 imagesNo,
-                quantity
+                quantity,
             }, {
                 withCredentials: true
             })
@@ -52,7 +52,7 @@ let productStore = create((set, get) => ({
             console.log(err)
         }
     },
-    updateProduct: async (product_name, price, id, category, sub_category, product_desc, product_short_details, product_long_details, imagesNo, quantity) => {
+    updateProduct: async (product_name, price, id, category, sub_category, product_desc, product_short_details, product_long_details, imagesNo, quantity, update) => {
 
         let changeNumber = +quantity;
 
@@ -67,7 +67,8 @@ let productStore = create((set, get) => ({
                 product_long_details,
                 product_short_details,
                 imagesNo,
-                quantity : changeNumber
+                quantity : changeNumber,
+                update
             }, {
                 withCredentials: true
             })

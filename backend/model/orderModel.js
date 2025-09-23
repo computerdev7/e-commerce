@@ -37,6 +37,10 @@ let schema = new mongoose.Schema({
     },
     refundfeedback : {
         type : String
+    },
+    quantity : {
+        type : Number,
+        required : true
     }
 }, {timestamps : true})
 

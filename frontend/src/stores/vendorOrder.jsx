@@ -1,62 +1,94 @@
 import { create } from "zustand"
 import axios from "axios"
 
-let vendorOrder = create(()=> ({
-    setAvailable : (id, cond) => {
+let vendorOrder = create(() => ({
+    setAvailable: async (id, cond) => {
+        try {
 
-        axios.put(`http://localhost:3000/vendororder/setavailable?id=${id}&cond=${cond}`, {}, {
-            withCredentials: true
-        })
-            .then(res => console.log(res.data.message))
+            let data = await axios.put(`http://localhost:3000/vendororder/setavailable?id=${id}&cond=${cond}`, {}, {
+                withCredentials: true
+            })
 
-    },
-    packaged : (id) => {
-
-        axios.put(`http://localhost:3000/vendororder/packaged?id=${id}`, {}, {
-            withCredentials: true
-        })
-            .then(res => console.log(res.data.message))
+            return data.data.message
+        } catch (err) {
+            console.log(err)
+        }
 
     },
-    cancelOrder : (id) => {
+    packaged: async (id) => {
+        try {
 
-        axios.delete(`http://localhost:3000/vendororder/confirmordercancel?id=${id}`, {}, {
-            withCredentials: true
-        })
-            .then(res => console.log(res.data.message))
+            let data = await axios.put(`http://localhost:3000/vendororder/packaged?id=${id}`, {}, {
+                withCredentials: true
+            })
 
-    },
-    sentOrder : (id)=> {
-
-        axios.put(`http://localhost:3000/vendororder/delivery?id=${id}`, {}, {
-            withCredentials: true
-        })
-            .then(res => console.log(res.data.message))
+            return data.data.message
+        } catch (err) {
+            console.log(err)
+        }
 
     },
-    getDelivery : (id)=> {
+    cancelOrder: async (id) => {
+        try {
 
-        axios.put(`http://localhost:3000/vendororder/getdelivery?id=${id}`, {}, {
-            withCredentials: true
-        })
-            .then(res => console.log(res.data.message))
-
-    },
-    refunded : (id)=> {
-
-        axios.put(`http://localhost:3000/vendororder/refunddelivered?id=${id}`, {}, {
-            withCredentials: true
-        })
-            .then(res => console.log(res.data.message))
+            let data = await axios.delete(`http://localhost:3000/vendororder/confirmordercancel?id=${id}`, {}, {
+                withCredentials: true
+            })
+            return data.data.message
+        } catch (err) {
+            console.log(err)
+        }
 
     },
-    applyFilter : (selectFilter, setOrderProducts, setPage)=> {
-        axios.get(`http://localhost:3000/vendororder/getorders?o=${selectFilter}&p=${1}`, {
-            withCredentials: true
-        })
-            .then(res => setOrderProducts(res.data.message))
-        
-        setPage(1)
+    sentOrder: async (id) => {
+        try {
+
+            let data = await axios.put(`http://localhost:3000/vendororder/delivery?id=${id}`, {}, {
+                withCredentials: true
+            })
+
+            return data.data.message
+        } catch (err) {
+            console.log(err)
+        }
+
+    },
+    getDelivery: async (id) => {
+        try {
+
+            let data = await axios.put(`http://localhost:3000/vendororder/getdelivery?id=${id}`, {}, {
+                withCredentials: true
+            })
+            return data.data.message
+        } catch (err) {
+            console.log(err)
+        }
+
+    },
+    refunded: async (id) => {
+        try {
+
+            let data = await axios.put(`http://localhost:3000/vendororder/refunddelivered?id=${id}`, {}, {
+                withCredentials: true
+            })
+            return data.data.message
+        } catch (err) {
+            console.log(err)
+        }
+
+    },
+    applyFilter: async (selectFilter, setOrderProducts, setPage) => {
+        try {
+
+            axios.get(`http://localhost:3000/vendororder/getorders?o=${selectFilter}&p=${1}`, {
+                withCredentials: true
+            })
+                .then(res => setOrderProducts(res.data.message))
+
+            setPage(1)
+        } catch (err) {
+            console.log(err)
+        }
     }
 
 }))

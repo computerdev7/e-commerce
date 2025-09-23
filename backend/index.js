@@ -1,34 +1,33 @@
+// packages
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
-import googleRoutes from "./routes/googleAuth.js";
-import GoogleAuth from "./utils/googleAuth.js";
-import connectToDb from "./database/database.js";
-import LocalAuth from "./routes/authRoutes.js";
-import MongoStore from "connect-mongo";
+import Razorpay from "razorpay";
 import session from "express-session";
 import passport from "passport";
+import MongoStore from "connect-mongo";
+// others
+import GoogleAuth from "./utils/googleAuth.js";
+import connectToDb from "./database/database.js";
+// importing routes
+import googleRoutes from "./routes/googleAuth.js";
+import LocalAuth from "./routes/authRoutes.js";
 import authSchema from "./model/authModel.js";
 import productRoute from "./routes/vendor_productRoutes.js";
 import productInfoRoute from "./routes/productInfo.js";
 import productRouteUser from "./routes/user_productRoutes.js";
 import userOrdersRoute from "./routes/userOrderRoutes.js"
-import Razorpay from "razorpay";
 import vendorOrderRoutes from "./routes/vendorOrderRoutes.js"
 
 dotenv.config();
-
 let app = express();
 
-console.log(process.env.RAZOR_KEY_ID) 
-
+// middlewares
 app.use(cors({
     origin: 'http://localhost:5173',
     credentials: true
 }));
-
 app.use(express.json());
-
 app.use(session({
     secret: process.env.SESSION_SECRET,
     resave: false,
@@ -44,7 +43,6 @@ app.use(session({
         ttl: 10 * 6 * 60
     })
 }))
-
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -59,8 +57,9 @@ passport.deserializeUser(async (user, done) => {
     }
 })
 
+// running util func for google auth
 GoogleAuth()
-
+ 
 const razorpay = new Razorpay({
     key_id: process.env.RAZOR_KEY_ID,
     key_secret: process.env.RAZOR_SECRET_KEY
@@ -68,6 +67,7 @@ const razorpay = new Razorpay({
 
 export default razorpay;
 
+// routes
 app.use('/auth/google', googleRoutes)
 app.use('/auth/local', LocalAuth)
 app.use('/vendor',productRoute)
@@ -75,7 +75,6 @@ app.use('/vendor',productInfoRoute)
 app.use('/user',productRouteUser)
 app.use('/userorder',userOrdersRoute)
 app.use('/vendororder',vendorOrderRoutes)
-
 
 
 app.listen(3000, () => {
