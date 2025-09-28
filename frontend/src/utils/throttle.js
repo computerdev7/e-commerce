@@ -8,4 +8,3 @@ export function throttle(func, delay){
         }
     }
 }
-// continue first examine throotle then next.... anything

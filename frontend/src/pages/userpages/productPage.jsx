@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, useMemo } from "react";
+import { useEffect, useRef, useState, useMemo, useCallback } from "react";
 import userProductStore from "../../stores/userProductStore"
 import axios from "axios";
 import store_util from "../../stores/store_util";
@@ -13,7 +13,8 @@ export default function ProductPage({ id }) {
     let { setProduct_id } = store_util();
     let [quantity, setQuantity] = useState(1);
 
-    async function checkOut() {
+    let checkOut = useCallback(async () => {
+
         let order = await axios.post('http://localhost:3000/userorder/create-order', { id: id, quantity }, {
             withCredentials: true
         })
@@ -40,8 +41,7 @@ export default function ProductPage({ id }) {
         }
         const rzp = new window.Razorpay(options)
         rzp.open();
-
-    }
+    }, [])
 
     useEffect(() => {
         getUserProduct(id)
@@ -162,7 +162,7 @@ export default function ProductPage({ id }) {
                                 className="border">
                                 Add to Cart
                             </button>
-                            <input className="border w-14" type="number" value={quantity} onChange={(e)=> setQuantity(e.currentTarget.value) }/>
+                            <input className="border w-14" type="number" value={quantity} onChange={(e) => setQuantity(e.currentTarget.value)} />
                             <button
                                 onClick={() => {
                                     if (wholeData?.quantity != '0') {

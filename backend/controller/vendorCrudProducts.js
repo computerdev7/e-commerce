@@ -4,13 +4,11 @@ import ProductSchema from "../model/productModel.js";
 export async function addProduct(req, res) {
 
     let { productname, price, category, sub_category, desc, shortDetailInput, longDetailInput, imagesNo, quantity } = req.body
-
     let id = req.user._id
-
     let changeToNumber = +quantity
 
     try {
-        
+
         let addProduct = new ProductSchema({
             product_owner: req.user._id,
             product_name: productname,
@@ -22,23 +20,18 @@ export async function addProduct(req, res) {
             category: category,
             quantity: changeToNumber
         })
-        
+
         let saveProduct = await addProduct.save()
-        
-        console.log(saveProduct, id)
-        let image300 = `https://e-commerce-image.s3.ap-south-1.amazonaws.com/vendor-product/${id}/${saveProduct._id}300.webp`
-        let image800 = `https://e-commerce-image.s3.ap-south-1.amazonaws.com/vendor-product/${id}/${saveProduct._id}800.webp`
-        let image1600 = `https://e-commerce-image.s3.ap-south-1.amazonaws.com/vendor-product/${id}/${saveProduct._id}1600.webp`
-       
+
         let imageUrl = {
-            image300,
-            image800,
-            image1600
+            image300: `https://e-commerce-image.s3.ap-south-1.amazonaws.com/vendor-product/${id}/${saveProduct._id}300.webp`,
+            image800: `https://e-commerce-image.s3.ap-south-1.amazonaws.com/vendor-product/${id}/${saveProduct._id}800.webp`,
+            image1600: `https://e-commerce-image.s3.ap-south-1.amazonaws.com/vendor-product/${id}/${saveProduct._id}1600.webp`
         }
 
         let imageExtraUrl = [];
-    
         let sizes = ['300', '800', '1600']
+
         for (let i = 1; i < imagesNo; i++) {
             let obj = {
                 image800: `https://e-commerce-image.s3.ap-south-1.amazonaws.com/vendor-product/${id}/${saveProduct._id}${i}800.webp`,
@@ -46,19 +39,15 @@ export async function addProduct(req, res) {
             }
             imageExtraUrl.push(obj)
         }
-        let updateProduct = await ProductSchema.findByIdAndUpdate({ _id: saveProduct._id }, { imageUrl: imageUrl , imageExtraUrl : imageExtraUrl})
+
+        await ProductSchema.findByIdAndUpdate({ _id: saveProduct._id }, { imageUrl: imageUrl, imageExtraUrl: imageExtraUrl })
 
         let presignedArray = [];
+        let presignedNu = presignedArray.length < 3 ? 1 : 0;
 
-        for (let i = 0; i < 3; i++) {
-            console.log(id)
-            let sendPostImageUrl = await getPreSignedImageUrl(id, `${saveProduct._id}${sizes[i]}.webp`)
-            presignedArray.push(sendPostImageUrl)
-        }
-
-        for (let i = 1; i < imagesNo; i++) {
-            for (let j = 1; j < 3; j++) {
-                let sendPostImageUrl = await getPreSignedImageUrl(id, `${saveProduct._id}${i}${sizes[j]}.webp`)
+        for (let i = 0; i < imagesNo; i++) {
+            for (let j = presignedNu; j < 3; j++) {
+                let sendPostImageUrl = await getPreSignedImageUrl(id, `${saveProduct._id}${i==0?'':i}${sizes[j]}.webp`)
                 presignedArray.push(sendPostImageUrl)
             }
         }
@@ -68,8 +57,6 @@ export async function addProduct(req, res) {
         res.status(500).json({ message: 'error in adding product', err })
         console.log(err)
     }
-
-
 }
 
 export async function deleteProduct(req, res) {
@@ -91,21 +78,20 @@ export async function deleteProduct(req, res) {
 
 export async function updateProduct(req, res) {
 
-    let id = req.body.id
-    let { imagesNo, update } = req.body
+    let { imagesNo, update, id } = req.body
     let userid = req.user._id
     let wholeUpdate = req.body
     let presignedArray = [];
-    
+
     try {
         if (update && imagesNo > 0) {
             let getProducts = await ProductSchema.find({ _id: id })
             await getDeletePreSignedUrl(userid, `${getProducts[0]._id}`, getProducts[0].imageExtraUrl)
-            
+
             let sizes = ['300', '800', '1600']
-        
+
             let imageExtraUrl = [];
-        
+
             for (let i = 1; i < imagesNo; i++) {
                 let obj = {
                     image800: `https://e-commerce-image.s3.ap-south-1.amazonaws.com/vendor-product/${req.user._id}/${getProducts[0]._id}${i}800.webp`,
@@ -114,14 +100,11 @@ export async function updateProduct(req, res) {
                 imageExtraUrl.push(obj)
             }
 
-            for (let i = 0; i < 3; i++) {
-                let sendPostImageUrl = await getPreSignedImageUrl(req.user._id, `${getProducts[0]._id}${sizes[i]}.webp`)
-                presignedArray.push(sendPostImageUrl)
-            }
+            let presignedNu = presignedArray.length < 3 ? 0 : 1;
 
             for (let i = 1; i < imagesNo; i++) {
-                for (let j = 1; j < 3; j++) {
-                    let sendPostImageUrl = await getPreSignedImageUrl(req.user._id, `${getProducts[0]._id}${i}${sizes[j]}.webp`)
+                for (let j = presignedNu; j < 3; j++) {
+                    let sendPostImageUrl = await getPreSignedImageUrl(req.user._id, `${getProducts[0]._id}${i==0?'':i}${sizes[j]}.webp`)
                     presignedArray.push(sendPostImageUrl)
                 }
             }
@@ -129,7 +112,7 @@ export async function updateProduct(req, res) {
         }
 
         let updateProduct = await ProductSchema.findByIdAndUpdate({ _id: id }, { $set: wholeUpdate }, { new: true })
-        if(update){
+        if (update) {
             res.status(200).json({ message: presignedArray })
         } else {
             res.status(200).json({ message: updateProduct })
@@ -137,6 +120,6 @@ export async function updateProduct(req, res) {
     } catch (err) {
         console.log(err)
         res.status(500).json({ message: 'error in updating product', err })
-   }
+    }
 
 }

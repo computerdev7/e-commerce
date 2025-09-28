@@ -5,6 +5,8 @@ import vendorPreSigned from "../stores/vendor_presignedUrl";
 import categoryStore from "../stores/categoryStore.jsx";
 import ProductShortDetail from "../component/productShortDetail.jsx";
 import ProductLongDetail from "../component/productLongDetail.jsx";
+import { useCallback } from "react";
+import { useMemo } from "react";
 
 export default function ProductStructure({ func, getFunc, type, id }) {
 
@@ -33,10 +35,11 @@ export default function ProductStructure({ func, getFunc, type, id }) {
         to: undefined
     })
     let [showImages, setShowImages] = useState(false)
-    let [updateImages , setUpdateImages] = useState(false)
+    let [updateImages, setUpdateImages] = useState(false)
 
-    let handleInput = (lable) => (e) =>
+    let handleInput = useCallback((lable) => (e) => {
         setFormData((prev) => ({ ...prev, [lable]: e.target.value }));
+    }, [])
 
     useEffect(() => {
 
@@ -45,23 +48,9 @@ export default function ProductStructure({ func, getFunc, type, id }) {
 
     }, [])
 
-    let renderImages = imageData?.map((el, i) => {
-        let url = URL.createObjectURL(el)
-        return (
-            <>
-                <div className=" flex justify-center items-center flex-col">
-                    <button onClick={() => setChangePosition(prev => ({ ...prev, to: i }))}>Put Here</button>
-                    <img className='w-24 inline' src={url} />
-                    <button onClick={() => setChangePosition({ from: i, to: undefined })} >Select</button>
-                </div>
-            </>
-        )
-    })
-
     useEffect(() => {
 
         if (changePosition.to != undefined && changePosition.from != undefined) {
-            console.log('running')
             setImageData((el) => {
                 let data1 = el[changePosition.to];
                 let data2 = el[changePosition.from];
@@ -81,28 +70,48 @@ export default function ProductStructure({ func, getFunc, type, id }) {
 
     }, [changePosition])
 
-    let rendorCategory = categoryArray?.map((e, i) => {
-        return (
-            <option key={i} value={e}>{e}</option>
-        )
-    })
-
-    async function compressImages(e) {
-        await compressImage(e).then(res => {
-            if (res == 0) {
-                alert('resolution out of bound')
-            } else if (res == 1) {
-                alert('img size is out of')
-            } else if (res == 2) {
-                alert('there is either less than 4 or more than 6 images')
-            }
-            else {
-                setImageData(res)
-                console.log(res)
-                setShowLoading(false)
-            }
+    let renderImages = useMemo(()=> {
+      return imageData?.map((el, i) => {
+            let url = URL.createObjectURL(el)
+            return (
+                <>
+                    <div className=" flex justify-center items-center flex-col">
+                        <button onClick={() => setChangePosition(prev => ({ ...prev, to: i }))}>Put Here</button>
+                        <img className='w-24 inline' src={url} />
+                        <button onClick={() => setChangePosition({ from: i, to: undefined })} >Select</button>
+                    </div>
+                </>
+            )
         })
-    }
+    },[imageData]) 
+
+
+    let rendorCategory = useMemo(() => {
+        return categoryArray?.map((e, i) => {
+            return (
+                <option key={i} value={e}>{e}</option>
+            )
+        })
+    }, [])
+
+    let compressImages = useCallback(
+        async (e) => {
+            await compressImage(e).then(res => {
+                if (res == 0) {
+                    alert('resolution out of bound')
+                } else if (res == 1) {
+                    alert('img size is out of')
+                } else if (res == 2) {
+                    alert('there is either less than 4 or more than 6 images')
+                }
+                else {
+                    setImageData(res)
+                    setShowLoading(false)
+                }
+            })
+
+        }, []
+    )
 
     useEffect(() => {
 
@@ -110,14 +119,15 @@ export default function ProductStructure({ func, getFunc, type, id }) {
 
             getFunc(id)
                 .then(res => {
-                    console.log(res.data.message)
-                    setFormData(prev => ({ ...prev, 
-                        productName: res.data.message[0].product_name, 
-                        productPrice : res.data.message[0].price,
-                        desc : res.data.message[0].product_desc, 
-                        category : res.data.message[0].category, 
-                        subCategory : res.data.message[0].sub_category,
-                        quantity : res.data.message[0].quantity }))
+                    setFormData(prev => ({
+                        ...prev,
+                        productName: res.data.message[0].product_name,
+                        productPrice: res.data.message[0].price,
+                        desc: res.data.message[0].product_desc,
+                        category: res.data.message[0].category,
+                        subCategory: res.data.message[0].sub_category,
+                        quantity: res.data.message[0].quantity
+                    }))
                     setShortDetailInput(res.data.message[0].product_short_details)
                     setLongDetailInput(res.data.message[0].product_long_details)
                 })
@@ -180,7 +190,7 @@ export default function ProductStructure({ func, getFunc, type, id }) {
                             <input type="number" className="border p-2 w-48" placeholder="price" value={formData.productPrice} onChange={handleInput('productPrice')} required />
                         </div>
                         <div className="">
-                            <p>set category</p>    
+                            <p>set category</p>
                             <select
                                 value={formData.category}
                                 onChange={handleInput('category')}
@@ -203,29 +213,29 @@ export default function ProductStructure({ func, getFunc, type, id }) {
                     <div className="w-full flex justify-between items-center">
                         <div className="w-1/2 flex items-center gap-2">
                             <p>Choose multiple images</p>
-                            <input disabled={updateImages? false : true} type="file" className="border p-2 w-3/6" onChange={async (e) => {
+                            <input disabled={updateImages ? false : true} type="file" className="border p-2 w-3/6" onChange={async (e) => {
                                 numberOfImages.current = e.currentTarget.files.length
-                                if(type != 'UPDATE' && !updateImages){
+                                if (type != 'UPDATE' && !updateImages) {
                                     setShowLoading(true)
                                     setShowImages(true)
                                     setImageData(Array.from(e.currentTarget.files))
                                 }
                             }} required multiple />
                         </div>
-                        { type == 'UPDATE' &&
-                        <button 
-                        onClick={()=> {
-                            setUpdateImages(prev=> !prev)
-                        }}
-                        className="p-2 border">
-                            {updateImages? "update images : true" : 'update images : false'}
-                        </button>
+                        {type == 'UPDATE' &&
+                            <button
+                                onClick={() => {
+                                    setUpdateImages(prev => !prev)
+                                }}
+                                className="p-2 border">
+                                {updateImages ? "update images : true" : 'update images : false'}
+                            </button>
                         }
                         <button disabled={showLoading ? true : false} className="border border-b p-2 w-32 disabled:border-gray-500 disabled:text-gray-600"
                             onClick={() => {
                                 func(formData.productName, formData.productPrice, id, formData.category, formData.subCategory, formData.desc, shortDetailInput, longDetailInput, numberOfImages.current, formData.quantity, updateImages)
                                     .then(res => {
-                                        if(type != 'UPDATE' && !updateImages ){
+                                        if (type != 'UPDATE' && !updateImages) {
                                             putImageOnS3(res.data.message, imageData)
                                                 .then(res => navigate('/vendorhome'))
                                         } else {

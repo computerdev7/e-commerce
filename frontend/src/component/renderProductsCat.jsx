@@ -6,7 +6,7 @@ import store_util from "../stores/store_util";
 export default function RenderProductCat({ productArray, category }) {
 
     let scrollRef = useRef(null);
-    let { addToCart } = userProductStore()
+    let { addToCart } = userProductStore();
     let {setProduct_id} = store_util();
     let navigate = useNavigate()
 

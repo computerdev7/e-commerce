@@ -1,5 +1,5 @@
 import categoryStore from "../stores/categoryStore.jsx"
-import { useEffect, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 
 export default function GetCategory({ chooseCategory, setChooseCategory, choosePrice, setChoosePrice }) {
 
@@ -13,13 +13,15 @@ export default function GetCategory({ chooseCategory, setChooseCategory, chooseP
 
     }, [])
 
-    let rendorCategory = categoryArray?.map((e) => {
-        return (
-            <>
-                <option value={e}>{e}</option>
-            </>
-        )
-    })
+    let rendorCategory = useMemo(()=> {
+        categoryArray?.map((e) => {
+            return (
+                <>
+                    <option value={e}>{e}</option>
+                </>
+            )
+        })
+    },[]) 
 
     return (
         <>

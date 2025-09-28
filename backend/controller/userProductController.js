@@ -4,7 +4,14 @@ import client from "../database/redis.js";
 
 export async function getCategories(req, res) {
     try {
+        let cacheValue = await client.get('result')
+
+        if(cacheValue){
+            let parseData = JSON.parse(cacheValue)
+            return res.status(200).json({ message: parseData })
+        }
         let data = await productInfo.find()
+        await client.set('result',JSON.stringify(data),{EX : 300})
         res.status(200).json({ message: data })
     } catch (err) {
         res.status(500).json({ message: err })
@@ -12,8 +19,6 @@ export async function getCategories(req, res) {
 }
 
 export async function getAllProducts(req, res) {
-
-    let sendArr = [];
 
     try {
         let cacheValue = await client.get('result')
@@ -28,26 +33,20 @@ export async function getAllProducts(req, res) {
 
             let categoryArray = data[0].product_categories
 
-            for (let i = 0; i < categoryArray.length; i++) {
-
-                let categoryData = await ProductSchema.aggregate([
-                    { $match: { category: categoryArray[i] } },
+            let promises = categoryArray.map((cat)=> 
+                
+                ProductSchema.aggregate([
+                    { $match: { category: cat } },
                     { $sample: { size: 10 } }
-                ])
+                ]).then((res)=> ({cat : res }))
 
-                let obj = {
-                    [categoryArray[i]]: categoryData
-                }
+            )
 
-                sendArr.push(obj)
+            let result = await Promise.all(promises)
 
-            }
+            await client.set('result',JSON.stringify(result), {EX : 60})
 
-            let stringify = JSON.stringify(sendArr)
-
-            await client.set('result',stringify, {EX : 60})
-
-            res.status(200).json({ message: sendArr })
+            res.status(200).json({ message: result })
         }
 
     } catch (err) {

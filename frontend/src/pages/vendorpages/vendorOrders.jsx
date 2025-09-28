@@ -1,4 +1,4 @@
-import { useEffect, useState} from "react"
+import { useEffect, useState, useRef} from "react"
 import axios from "axios"
 import vendorOrder from "../../stores/vendorOrder";
 import store_util from "../../stores/store_util.jsx"
@@ -14,21 +14,22 @@ export default function VendorOrders() {
     let { applyFilter } = vendorOrder()
     let { product_id} = store_util();
 
-    let handleScroll = throttle((e) => { 
-        
-        let { clientHeight, scrollHeight, scrollTop } = e.target
-        if (clientHeight + scrollTop >= scrollHeight - 1) {
-            setPage(prev => prev + 1);
-            axios.get(`http://localhost:3000/vendororder/getorders?o=${selectFilter}&p=${page + 1}`, {
-                withCredentials: true
-            })
-                .then(res => {
-                    if (res.data.message.length != 0) {
-                        setOrderProducts(prev => [...prev, res.data.message[0]])
-                    }
+    let handleScroll = useRef(
+        throttle((e) => { 
+            let { clientHeight, scrollHeight, scrollTop } = e.target
+            if (clientHeight + scrollTop >= scrollHeight - 1) {
+                setPage(prev => prev + 1);
+                axios.get(`http://localhost:3000/vendororder/getorders?o=${selectFilter}&p=${page + 1}`, {
+                    withCredentials: true
                 })
-        }
-    }, 200)
+                    .then(res => {
+                        if (res.data.message.length != 0) {
+                            setOrderProducts(prev => [...prev, res.data.message[0]])
+                        }
+                    })
+            }
+        }, 200)
+    ).current
 
     useEffect(() => {
 

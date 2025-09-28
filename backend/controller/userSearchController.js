@@ -1,89 +1,70 @@
 import ProductSchema from "../model/productModel.js";
 import client from "../database/redis.js";
 
-export async function userSearch(req,res){
-    
-    let {q,cat,p } = req.query
+export async function userSearch(req, res) {
+
+    let { q, cat, p } = req.query
     let regex = new RegExp(q, 'i');
     let page = req.query.page || 1;
     let skip = (page - 1) * 10;
     let data = '';
 
     let filter = {
-        product_name : {$regex : `^${q}`, $options: 'i'},
-        category : cat,
+        product_name: q.length < 4 ? { $regex: `^${q}`, $options: 'i' } : regex,
     }
 
-    let filter1 = {
-        product_name : regex,
-        category : cat,
+    if (cat && cat != 'choose category') {
+        filter.category = cat
     }
 
-    for (let key in filter){
-        if(filter[key] == '' || filter[key] == 'choose category'){
-            delete filter[key]
-        }
-    }
+    let sort = p == 'High - Low' ? { price: -1 } : { price: 1 };
 
-    for (let key in filter1){
-        if(filter1[key] == '' ||  filter[key] == 'choose category'){
-            delete filter1[key]
-        }
-    }
+    try {
 
-    let sort = '';
+        let defaultPage = (cat == '' || cat == 'choose category') && q == '' && page == 1;
 
-    if(p == 'High - Low'){
-        sort = {price : -1}
-    } else if (p == 'Low - High'){
-        sort = {price : 1}
-    } else {
-        sort = {price : 1}
-    }
-
-    try{    
-
-        if((cat == '' || cat == 'choose category') && q == '' && page == 1){
+        if (defaultPage) {
             let cacheValue = await client.get('usersearchresult')
-            if(cacheValue){
+            if (cacheValue) {
                 let parse = JSON.parse(cacheValue)
-                return res.status(200).json({message : parse})
-            } else {
-                data = await ProductSchema.find(filter).skip(skip).limit(10).sort(sort);
-                let stringify = JSON.stringify(data)
-                await client.set('usersearchresult',stringify, {EX : 120})
+                return res.status(200).json({ message: parse })
             }
         }
-
-         if(q.length < 4){
-           
-            data = await ProductSchema.find(filter).skip(skip).limit(10).sort(sort);
-
-        } else {
-           
-            data = await ProductSchema.find(filter1).skip(skip).limit(10).sort(sort);
-            
+        
+        data = await ProductSchema.find(filter).skip(skip).limit(10).sort(sort);
+        
+        if(defaultPage){
+            let stringify = JSON.stringify(data)
+            await client.set('usersearchresult', stringify, { EX: 120 })
         }
 
-        res.status(200).json({message : data})
-    }catch(err){
+        res.status(200).json({ message: data })
+    } catch (err) {
         console.log(err)
-        res.status(500).json({message : err})
+        res.status(500).json({ message: err })
     }
 
 }
 
-export async function searchSuggestion(req,res){
+export async function searchSuggestion(req, res) {
 
     // add category filter to get more personlized serach results
     let q = req.query.q
-    
-    try{
-        let data = await ProductSchema.find({product_name : { $regex : `^${q}`, $options: 'i'}})
-        res.status(200).json({message : data })
-    }catch(err){
+
+    try {
+        let result = await client.get('result')
+        if(result){
+            let parse = JSON.parse(result)
+            return res.status(200).json({message : parse })
+        }
+
+        let data = await ProductSchema.find({ product_name: { $regex: `^${q}`, $options: 'i' } })
+        let stringify = JSON.stringify(data)
+        await client.set('result',stringify,{EX: 120})
+        res.status(200).json({ message: data })
+    } catch (err) {
         console.log(err)
-        res.status(500).json({message : err})
+        res.status(500).json({ message: err })
     }
 
 }

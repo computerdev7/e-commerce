@@ -1,13 +1,15 @@
-import { useMemo } from "react";
+import { useMemo, useRef } from "react";
 import userProductStore from "../stores/userProductStore";
 import store_util from "../stores/store_util";
+import { throttle } from "../utils/throttle.js"
 
 export default function ShowUserProducts({ setPage, page, searchText, chooseCategory, choosePrice, setProduct, product }) {
 
     let { searchProduct, addToCart } = userProductStore();
-    let {setProduct_id} = store_util();
+    let { setProduct_id } = store_util();
 
-    function handleScroll(e) {
+    let handleScroll = useRef(throttle((e) => {
+
         const { scrollTop, clientHeight, scrollHeight } = e.currentTarget
 
         if (scrollTop + clientHeight >= scrollHeight - 1) {
@@ -19,15 +21,16 @@ export default function ShowUserProducts({ setPage, page, searchText, chooseCate
                     setProduct(e => [...e, ...res.data.message])
                 })
         }
-    }
+    }), 200
+    ).current
 
     let renderProduct = useMemo(() => {
-       return product?.map((res) => {
+        return product?.map((res) => {
             return (
                 <>
                     <div
                         onClick={() => {
-                            setProduct_id({id : res._id , cond : true})
+                            setProduct_id({ id: res._id, cond: true })
                         }}
                         className="h-50 w-50 bg-amber-300 p-2">
                         <div className="w-full h-2/3 overflow-hidden">
@@ -51,7 +54,7 @@ export default function ShowUserProducts({ setPage, page, searchText, chooseCate
                 </>
             )
         })
-    },[product])
+    }, [product])
 
     return (
         <>

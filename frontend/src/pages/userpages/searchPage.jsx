@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { useNavigate, useLocation } from "react-router"
 import userProductStore from "../../stores/userProductStore";
 import FilterSearchPage from "../../component/filterSearchPage.jsx";
@@ -6,6 +6,7 @@ import SearchSuggestion from "../../component/searchSuggestion.jsx";
 import ShowUserProducts from "../../component/showUserProducts.jsx";
 import store_util from "../../stores/store_util.jsx"
 import ProductPage from "./productPage.jsx";
+import debounce from "../../utils/debouncer.js"
 
 export default function SearchPage() {
 
@@ -19,9 +20,7 @@ export default function SearchPage() {
     let [chooseCategory, setChooseCategory] = useState('')
     let [choosePrice, setChoosePrice] = useState('')
     let [searchSuggest, setSearchSuggest] = useState([])
-    let { product_id, setProduct_id } = store_util()
-
-    console.log(product_id)
+    let { product_id } = store_util()
 
     useEffect(() => {
         if (location.state?.category) {
@@ -35,9 +34,7 @@ export default function SearchPage() {
         }
     }, [])
 
-    console.log(product)
-
-    function onSearchInputChange(e) {
+    let onSearchInputChange = useRef(debounce((e) => {
 
         if (e.currentTarget.value != 0) {
             searchSuggestion(e.currentTarget.value)
@@ -45,15 +42,13 @@ export default function SearchPage() {
         } else {
             setSearchSuggest([])
         }
-
-        setSearchText(e.currentTarget.value)
-
+    
         if (!/^\s*$/.test(e.currentTarget.value)) {
             searchProduct(e.currentTarget.value, 1, chooseCategory, choosePrice)
                 .then(res => setProduct(res.data.message))
             setPage(1)
         }
-    }
+    }),200).current
 
     return (
         <> {product_id.cond ?
@@ -68,6 +63,7 @@ export default function SearchPage() {
                                 <input className="border border-white"
                                     value={searchText} onChange={(e) => {
                                         onSearchInputChange(e);
+                                        setSearchText(e.currentTarget.value)
                                     }} />
                                 <SearchSuggestion searchSuggest={searchSuggest} setSearchSuggest={setSearchSuggest} setSearchText={setSearchText} />
                             </div>

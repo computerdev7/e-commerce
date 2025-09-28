@@ -15,8 +15,6 @@ export default function Cart() {
             .then(res => setProducts(res.data.message))
     }, [])
 
-    console.log(product_id)
-
     let renderProducts = useMemo(() => {
         return products?.map((e) => {
             return (
