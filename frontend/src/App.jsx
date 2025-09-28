@@ -15,6 +15,7 @@ import VendorOrders from "./pages/vendorpages/vendorOrders.jsx"
 
 export default function App() {
 
+  console.log('hello')
   return (
       <>
       <Routes>
