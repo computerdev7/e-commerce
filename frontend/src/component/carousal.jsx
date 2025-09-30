@@ -4,7 +4,7 @@ export default function Carousal(){
 
     let [currentImages,setCurrentImages] = useState(0);
 
-    let images = ['http://localhost:5173/1.png','http://localhost:5173/2.png','http://localhost:5173/3.png'];
+    let images = ['1.png','2.png','3.png'];
 
     function moveCarousal(dir){
 
