@@ -9,7 +9,7 @@ routes.get('/',
 routes.get('/callback',
     passport.authenticate('google',{failureRedirect : '/'}),
     (req,res)=> {
-        res.redirect('http://localhost:5173/userhome')
+        res.redirect('https://akash-e-comm.vercel.app/userhome')
     }
 )
 

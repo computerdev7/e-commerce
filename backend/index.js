@@ -24,7 +24,7 @@ let app = express();
 
 // middlewares
 app.use(cors({
-    origin: 'http://localhost:5173',
+    origin: 'https://akash-e-comm.vercel.app/',
     credentials: true
 }));
 app.use(express.json());
@@ -35,8 +35,8 @@ app.use(session({
     cookie: {
         maxAge: 1000 * 10 * 6 * 60,
         httpOnly: true,
-        sameSite: 'lax',
-        secure : false
+        sameSite:'none',
+        secure : true
     },
     store: MongoStore.create({
         mongoUrl: process.env.MONGO_DB,
@@ -77,7 +77,7 @@ app.use('/userorder',userOrdersRoute)
 app.use('/vendororder',vendorOrderRoutes)
 
 
-app.listen(3000, () => {
+app.listen(3000,'0.0.0.0', () => {
     connectToDb();
     console.log("Server running on http://localhost:3000")
 }

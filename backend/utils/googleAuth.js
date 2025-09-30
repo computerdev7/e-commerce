@@ -7,7 +7,7 @@ export default async function GoogleAuth() {
     passport.use(new GoogleStrategy({
         clientID: process.env.CLIENT_ID,
         clientSecret: process.env.CLIENT_SECRET,
-        callbackURL: 'http://localhost:3000/auth/google/callback'
+        callbackURL: 'https://akash-e-comm.vercel.app/auth/google/callback'
     },
         async (accessToken, refreshToken, profile, done) => {
             let findUser = await authSchema.find({username : profile.emails[0].value})
