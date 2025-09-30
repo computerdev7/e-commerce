@@ -1,11 +1,13 @@
 import { create } from "zustand"
 import axios from "axios"
 
+let url = 'https://loans-substance-retreat-rounds.trycloudflare.com'
+
 let vendorOrder = create(() => ({
     setAvailable: async (id, cond) => {
         try {
 
-            let data = await axios.put(`http://localhost:3000/vendororder/setavailable?id=${id}&cond=${cond}`, {}, {
+            let data = await axios.put(`${url}/vendororder/setavailable?id=${id}&cond=${cond}`, {}, {
                 withCredentials: true
             })
 
@@ -18,7 +20,7 @@ let vendorOrder = create(() => ({
     packaged: async (id) => {
         try {
 
-            let data = await axios.put(`http://localhost:3000/vendororder/packaged?id=${id}`, {}, {
+            let data = await axios.put(`${url}/vendororder/packaged?id=${id}`, {}, {
                 withCredentials: true
             })
 
@@ -31,7 +33,7 @@ let vendorOrder = create(() => ({
     cancelOrder: async (id) => {
         try {
 
-            let data = await axios.delete(`http://localhost:3000/vendororder/confirmordercancel?id=${id}`, {}, {
+            let data = await axios.delete(`${url}/vendororder/confirmordercancel?id=${id}`, {}, {
                 withCredentials: true
             })
             return data.data.message
@@ -43,7 +45,7 @@ let vendorOrder = create(() => ({
     sentOrder: async (id) => {
         try {
 
-            let data = await axios.put(`http://localhost:3000/vendororder/delivery?id=${id}`, {}, {
+            let data = await axios.put(`${url}/vendororder/delivery?id=${id}`, {}, {
                 withCredentials: true
             })
 
@@ -56,7 +58,7 @@ let vendorOrder = create(() => ({
     getDelivery: async (id) => {
         try {
 
-            let data = await axios.put(`http://localhost:3000/vendororder/getdelivery?id=${id}`, {}, {
+            let data = await axios.put(`${url}/vendororder/getdelivery?id=${id}`, {}, {
                 withCredentials: true
             })
             return data.data.message
@@ -68,7 +70,7 @@ let vendorOrder = create(() => ({
     refunded: async (id) => {
         try {
 
-            let data = await axios.put(`http://localhost:3000/vendororder/refunddelivered?id=${id}`, {}, {
+            let data = await axios.put(`${url}/vendororder/refunddelivered?id=${id}`, {}, {
                 withCredentials: true
             })
             return data.data.message
@@ -80,7 +82,7 @@ let vendorOrder = create(() => ({
     applyFilter: async (selectFilter, setOrderProducts, setPage) => {
         try {
 
-            axios.get(`http://localhost:3000/vendororder/getorders?o=${selectFilter}&p=${1}`, {
+            axios.get(`${url}/vendororder/getorders?o=${selectFilter}&p=${1}`, {
                 withCredentials: true
             })
                 .then(res => setOrderProducts(res.data.message))

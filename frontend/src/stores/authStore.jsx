@@ -1,7 +1,7 @@
 import {create} from "zustand"
 import axios from "axios"
 
-let url = 'http://localhost:3000'
+let url = 'https://loans-substance-retreat-rounds.trycloudflare.com'
 
 let useStore = create((set,get)=> ({
     usersignUp : async(username,password,usertype)=> {

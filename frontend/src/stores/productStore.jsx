@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import axios from "axios";
 
-let url = 'http://localhost:3000'
+let url = 'https://loans-substance-retreat-rounds.trycloudflare.com'
 
 let productStore = create((set, get) => ({
     addProduct: async (product_name, price, id, category, sub_category, desc, shortDetailInput, longDetailInput, imagesNo, quantity) => {

@@ -1,7 +1,7 @@
 import { create } from "zustand"
 import axios from "axios"
 
-let url = '`http://localhost:3000/userorder/'
+let url = '`https://loans-substance-retreat-rounds.trycloudflare.com/userorder/'
 
 let userOrder = create((set, get) => ({
 
@@ -20,7 +20,7 @@ let userOrder = create((set, get) => ({
     cancelOrder: async (id) => {
         try {
 
-            let data = await axios.put(`http://localhost:3000/userorder/cancelorder?id=${id}`, {
+            let data = await axios.put(`${url}cancelorder?id=${id}`, {
                 withCredentials: true
             })
 
@@ -32,7 +32,7 @@ let userOrder = create((set, get) => ({
     delivered: async (id) => {
         try {
 
-            let data = await axios.put(`http://localhost:3000/userorder/delivered?id=${id}`, {
+            let data = await axios.put(`${url}delivered?id=${id}`, {
                 withCredentials: true
             })
 
@@ -44,7 +44,7 @@ let userOrder = create((set, get) => ({
     returnOrder: async (id, refundFeedback) => {
         try {
 
-            let data = await axios.post(`http://localhost:3000/userorder/return?id=${id}`, {
+            let data = await axios.post(`${url}return?id=${id}`, {
                 f: refundFeedback
             }, {
                 withCredentials: true
@@ -57,7 +57,7 @@ let userOrder = create((set, get) => ({
     giveOrderToDelivery: async (id) => {
         try {
 
-            let data = await axios.put(`http://localhost:3000/userorder/refunddelivery?id=${id}`, {
+            let data = await axios.put(`${url}refunddelivery?id=${id}`, {
                 withCredentials: true
             })
 
@@ -69,7 +69,7 @@ let userOrder = create((set, get) => ({
     applyFilter: (selectFilter, setOrders) => {
         try {
 
-            axios.get(`http://localhost:3000/userorder/getorders?o=${selectFilter}`, {
+            axios.get(`${url}getorders?o=${selectFilter}`, {
                 withCredentials: true
             })
                 .then(res => setOrders(res.data.message))

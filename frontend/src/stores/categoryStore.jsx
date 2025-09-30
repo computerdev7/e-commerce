@@ -5,7 +5,7 @@ let categoryStore = create((set,get)=> ({
     getCategory : async()=> {
 
         try{
-            let data = await axios.get('http://localhost:3000/vendor/getCategories',{
+            let data = await axios.get('https://loans-substance-retreat-rounds.trycloudflare.com/vendor/getCategories',{
                 withCredentials : true
             })
 
@@ -18,7 +18,7 @@ let categoryStore = create((set,get)=> ({
     getCategoryU : async()=> {
 
         try{
-            let data = await axios.get('http://localhost:3000/user/getCategories',{
+            let data = await axios.get('https://loans-substance-retreat-rounds.trycloudflare.com/user/getCategories',{
                 withCredentials : true
             })
 

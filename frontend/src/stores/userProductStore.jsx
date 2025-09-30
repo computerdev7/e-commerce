@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import axios from "axios";
 
-let url = 'http://localhost:3000/user'
+let url = 'https://loans-substance-retreat-rounds.trycloudflare.com/user'
 
 let userProductStore = create((set, get) => ({
 
