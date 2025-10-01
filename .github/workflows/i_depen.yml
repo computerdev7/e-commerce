@@ -1,10 +1,10 @@
 name: checking1
 
 on: push
-# 
+
 jobs: 
   just_checking:
-    runs-on: ubuntu-lastest
+    runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
     - name: install packages etc
