@@ -25,7 +25,7 @@ jobs:
       working-directory: ./backend
     
     - name: start the server
-      run: node backend/index.js
+      run: node backend/index.js &
       env: 
         CLIENT_ID : ${{secrets.CLIENT_ID}}
         CLIENT_SECRET : ${{secrets.CLIENT_SECRET}}
