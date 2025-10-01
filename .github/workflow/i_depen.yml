@@ -1,0 +1,28 @@
+name: checking1
+
+on: push
+
+jobs: 
+  just_checking:
+    runs-on: ubuntu-lastest
+    steps:
+    - uses: actions/checkout@v4
+    - name: install packages etc
+      uses: actions/setup-node@v4
+      with: 
+        node-version: 22
+    - name: start mongodb
+      uses: supercharge/mongodb-github-action@1.12.0
+      with:
+        mongodb-version: 7.0
+
+    - name: start redis
+      uses: supercharge/redis-github-action@1.7.0
+      with: 
+        redis-server: 7
+    - name: install dependencies
+      run: npm install
+      working-directory: ./backend
+    
+    - name: start the server
+      run: node backend/index.js
