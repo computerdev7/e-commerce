@@ -60,7 +60,7 @@ jobs:
         key: ${{secrets.EC2_KEY}}
         source: "./backend/*"
         target: "/home/ubuntu/e-commerce/backend"
-        
+
     - name: deploy the backend (running the code)
       uses: appleboy/ssh-action@master
       with: 
@@ -69,7 +69,7 @@ jobs:
         key: ${{secrets.EC2_KEY}}
         script: |
           cd /home/ubuntu/e-commerce
-          pm2 delete index
+          /home/ubuntu/.npm-global/bin/pm2 delete index
           npm install
-          pm2 start backend/index.js -i max
-          pm2 save
+          /home/ubuntu/.npm-global/bin/pm2 start backend/index.js -i max
+          /home/ubuntu/.npm-global/bin/pm2 save
