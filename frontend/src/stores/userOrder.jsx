@@ -3,7 +3,7 @@ import axios from "axios"
 
 let url = '`https://loans-substance-retreat-rounds.trycloudflare.com/userorder/'
 
-let userOrder = create((set, get) => ({
+let userOrder = create(() => ({
 
     orderIsNotAvailable: async (id) => {
         try {

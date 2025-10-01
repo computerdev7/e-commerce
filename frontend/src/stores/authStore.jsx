@@ -3,7 +3,7 @@ import axios from "axios"
 
 let url = 'https://loans-substance-retreat-rounds.trycloudflare.com'
 
-let useStore = create((set,get)=> ({
+let useStore = create(()=> ({
     usersignUp : async(username,password,usertype)=> {
         let sendReq = await axios.post(`${url}/auth/local/user/signup`,{
             username : username,

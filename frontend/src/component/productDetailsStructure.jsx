@@ -237,7 +237,11 @@ export default function ProductStructure({ func, getFunc, type, id }) {
                                     .then(res => {
                                         if (type != 'UPDATE' && !updateImages) {
                                             putImageOnS3(res.data.message, imageData)
-                                                .then(res => navigate('/vendorhome'))
+                                                .then(res => {
+                                                    if(res){
+                                                        navigate('/vendorhome')
+                                                    }
+                                                })
                                         } else {
                                             navigate('/vendorhome')
                                         }

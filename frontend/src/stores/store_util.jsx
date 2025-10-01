@@ -1,6 +1,6 @@
 import { create } from "zustand";
 
-let store_util = create((set,get) => ({
+let store_util = create((set) => ({
     product_id : {
         id : '',
         cond : false,

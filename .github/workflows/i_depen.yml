@@ -24,6 +24,25 @@ jobs:
       run: npm install
       working-directory: ./backend
     
+    - name: check api
+      run: curl http://localhost:3000/getAllProducts
+
+    - name: install dependencies frontend
+      run: npm install
+      working-directory: ./frontend
+
+    - name: check linitng
+      run: npm run lint
+      working-directory: ./frontend
+
+    - name: checking dependencies
+      run: npm audit --audit-level=high
+      working-directory: ./frontend
+
+    - name: run frontend 
+      run: npm run dev &
+      working-directory: ./frontend
+
     - name: start the server
       run: node backend/index.js &
       env: 

@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import axios from "axios";
 
-let categoryStore = create((set,get)=> ({
+let categoryStore = create(()=> ({
     getCategory : async()=> {
 
         try{

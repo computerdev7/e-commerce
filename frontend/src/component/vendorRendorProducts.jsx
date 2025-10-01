@@ -24,7 +24,7 @@ export default function VendorRendorProduct({ setPage, setProducts, productName,
   },200)).current
 
   let renderProduct =  useMemo(()=> {
-    products?.map((e, i) => {
+    products?.map((e) => {
   
         return (
           <>
