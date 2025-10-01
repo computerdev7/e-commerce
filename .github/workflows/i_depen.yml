@@ -24,8 +24,6 @@ jobs:
       run: npm install
       working-directory: ./backend
     
-    - name: check api
-      run: curl http://localhost:3000/getAllProducts
 
     - name: install dependencies frontend
       run: npm install
@@ -55,3 +53,6 @@ jobs:
         S3_ACCESS_KEY : ${{secrets.S3_ACCESS_KEY}}
         S3_SECRET_KEY : ${{secrets.S3_SECRET_KEY}}
         SESSION_SECRET : ${{secrets.SESSION_SECRET}}
+        
+    - name: check api
+      run: curl http://localhost:3000/getAllProducts
