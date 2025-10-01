@@ -26,3 +26,13 @@ jobs:
     
     - name: start the server
       run: node backend/index.js
+      env: 
+        CLIENT_ID : ${{secrets.CLIENT_ID}}
+        CLIENT_SECRET : ${{secrets.CLIENT_SECRET}}
+        MONGO_DB : ${{secrets.MONGO_DB}}
+        PORT : ${{secrets.PORT}}
+        RAZOR_KEY_ID : ${{secrets.RAZOR_KEY_ID}}
+        RAZOR_SECRET_KEY : ${{secrets.RAZOR_SECRET_KEY}}
+        S3_ACCESS_KEY : ${{secrets.S3_ACCESS_KEY}}
+        S3_SECRET_KEY : ${{secrets.S3_SECRET_KEY}}
+        SESSION_SECRET : ${{secrets.SESSION_SECRET}}
