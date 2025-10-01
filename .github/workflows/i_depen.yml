@@ -59,7 +59,7 @@ jobs:
         username: ${{secrets.EC2_USER}}
         key: ${{secrets.EC2_KEY}}
         source: "./backend/*"
-        target: "/home/ubuntu/e-commerce/backend"
+        target: "/home/ubuntu/e-commerce"
 
     - name: deploy the backend (running the code)
       uses: appleboy/ssh-action@master
