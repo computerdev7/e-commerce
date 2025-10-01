@@ -11,10 +11,6 @@ jobs:
       uses: actions/setup-node@v4
       with: 
         node-version: 22
-    - name: start mongodb
-      uses: supercharge/mongodb-github-action@1.12.0
-      with:
-        mongodb-version: 7.0
 
     - name: start redis
       uses: supercharge/redis-github-action@1.7.0
@@ -53,6 +49,6 @@ jobs:
         S3_ACCESS_KEY : ${{secrets.S3_ACCESS_KEY}}
         S3_SECRET_KEY : ${{secrets.S3_SECRET_KEY}}
         SESSION_SECRET : ${{secrets.SESSION_SECRET}}
-        
+
     - name: check api
-      run: curl http://localhost:3000/getAllProducts
+      run: curl http://localhost:3000/user/getAllProducts
